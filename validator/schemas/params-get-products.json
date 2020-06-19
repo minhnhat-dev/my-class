@@ -1,0 +1,36 @@
+{
+  "$id": "params-get-products.json#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [],
+  "minProperties": 1,
+  "properties": {
+    "keywords": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "disabled"
+      ]
+    },
+    "type": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "skip": {
+      "type": "number",
+      "default": 0,
+      "minimum": 0
+    },
+    "limit": {
+      "type": "number",
+      "default": 20,
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false
+}
