@@ -1,0 +1,62 @@
+/*
+
+Letter Template
+
+https://templatemo.com/tm-510-letter
+
+*/
+
+body {
+	overflow-x: hidden;
+}
+
+a, button {
+	transition: all 0.3s ease;
+	color: #FFFFFF;
+}
+
+button:focus {
+    outline: none;
+}
+
+a:hover {
+	color: #FFFF00;
+	text-decoration: underline;
+}
+a:focus {
+	text-decoration: none;
+	outline: none;
+}
+
+h1 {
+	color: #FFFFFF;
+	font-size: 4rem;
+}
+
+p {
+	color: #FFFFFF;
+}
+
+#particles-js {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    height: 99%;
+}
+
+.cb-slideshow-text-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.tm-content {
+    z-index: 1001;
+}
+
+.fa {
+    color: #FFFFFF;
+}
+
