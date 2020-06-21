@@ -25,6 +25,5 @@ module.exports = function (router, Model) {
 			middlewares.push(methods[method]);
 		}
 		router[verb](path, middlewares);
-		console.log('router init', router.stack);
 	});
 };

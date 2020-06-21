@@ -1,0 +1,12 @@
+# dependencies
+/node_modules
+
+
+
+# misc
+.idea
+/logs
+.nyc_output/
+
+package-lock.json
+.env

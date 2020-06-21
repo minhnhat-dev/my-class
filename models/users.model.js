@@ -19,7 +19,7 @@ const UserSchema = new Schema({
 	roles: [],
 	facebookId: {type: String, default: null},
 	googleId: {type: String, default: null},
-}, { versionKey: false });
+}, { versionKey: false, timestamps: true });
 
 /**
  * Defined statics access control list on User
