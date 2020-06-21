@@ -1,0 +1,28 @@
+{
+  "$id": "input-create-post.json#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [],
+  "minProperties": 1,
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "subTitle": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

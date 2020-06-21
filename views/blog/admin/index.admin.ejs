@@ -1,0 +1,87 @@
+<% include ../header.blog.ejs%>
+<!-- Navigation -->
+
+<div class="main-wrapper">
+    <div class="col-md-12 m-b-30" style="border-bottom: 2px solid #ababac;">
+        <h2>Thêm bài viết</h2>
+    </div>
+    <div class="col-md-12" style="display: inline-flex">
+            <div class="col-md-9">
+                <form action="/admin/post" method="post" onsubmit="return createPost(this);">
+                    <div class="col-md-12 no-padding m-b-10">
+                        <label for="">Tên tiêu đề</label>
+                        <input class="form-control" type="text" name="title" placeholder="Tiêu đề bài viết">
+                    </div>
+                    <div class="col-md-5 no-padding m-b-10">
+                        <label for="">Ảnh đại diện bài viết</label>
+                        <input type="file" name="images" class="form-control" style="width: 125px;" multiple/>
+                    </div>
+                    <div class="col-md-12 no-padding m-b-10">
+                        <label for="">Nội dung tóm tắt</label>
+                        <textarea class="form-control" name="subTitle"></textarea>
+                    </div>
+                    <div class="col-md-12 no-padding">
+                        <label for="">Nội dung</label>
+                        <textarea id="full-featured-non-premium" name="content">
+                        </textarea>
+                    </div>
+
+                    <div class="col-md-12 text-right no-padding m-t-10 m-b-10" >
+                        <button type="submit" class="btn btn-success" style="width: 150px">Thêm</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+                <div class="col-md-12 no-padding">
+                    <div class="box-option-md">
+                        <div>
+                            <label>Danh mục</label>
+                            <select name="category" id="" class="form-control">
+
+                            </select>
+                        </div>
+                        <div class="m-t-10">
+                            <label>Tag</label>
+                            <input type="text" name="tags" class="form-control">
+                        </div>
+                        <div class="m-t-10">
+                            <label>Tác giả</label>
+                            <input type="text" name="author" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div><!--//main-wrapper-->
+
+<script>
+  function createPost(form) {
+    $.ajax({
+      url: "",
+      type: "POST",
+      data: {
+        title: form.title.value,
+        content: window.parent.tinymce.get('full-featured-non-premium').getContent() || form.content.value,
+        subTitle: form.subTitle.value
+      },
+      success: function (res) {
+        console.log('res', res);
+        alert('Success!');
+      },
+      error: function (err) {
+        return alert('Error!');
+        console.log('err',err);
+      }
+    })
+    console.log('1233');
+  }
+
+</script>
+
+<%include ../footer.blog.ejs%>
+
+<!--category: form.category.value,-->
+<!--tags: form.tags.value,-->
+<!--author: form.author.value,-->
+
+

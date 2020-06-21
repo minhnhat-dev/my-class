@@ -62,7 +62,23 @@ const uploadFiles = {
 			'image/jpeg'
 		],
 		'maxFileSize': 8388608
-	}
+	},
+  'create-posts': {
+    'fields': [
+      {
+        'name': 'image',
+        'maxCount': 5
+      }
+    ],
+    'acl': 'public-read',
+    'fieldKey': 'posts',
+    'bucket': 'posts',
+    'allowedContentTypes': [
+      'image/png',
+      'image/jpeg'
+    ],
+    'maxFileSize': 8388608
+  }
 };
 
 module.exports =  {

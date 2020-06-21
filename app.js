@@ -58,12 +58,12 @@ app.use(responseTime());
 app.get('/',
   function(req, res) {
     // console.log('req.session', req.session.passport);
-    res.render(path.resolve('src/views/index.ejs'));
+    res.render(path.resolve('./views/index.ejs'));
   });
 
 
 app.route('/login').get(async function (req, res) {
-  res.render(path.resolve('src/views/user/login.ejs'));
+  res.render(path.resolve('./views/user/login.ejs'));
 });
 
 /* login with facebook */
@@ -87,7 +87,7 @@ app.get('/auth/google',
   });
 
 
-app.use('/api', routes);
+app.use(routes);
 app.use(errorMiddleware);
 app.use(errorhandler({ log: errorNotification }));
 function errorNotification (err, str, req) {

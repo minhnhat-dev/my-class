@@ -105,7 +105,6 @@ async function upload (key, req, res, options) {
 	/* ~ upload file with util.promisify~ */
 	const uploadCd = util.promisify(upload.fields(config.fields));
 	await uploadCd(req, res);
-
 	/* ~ handle files ~ */
 	_validateFileUpload(req.files, config.fields, options);
 	const files = _formatFiles(config, req.files);
