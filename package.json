@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "ajv": "^6.12.2",
@@ -25,6 +25,7 @@
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
     "node-notifier": "^7.0.1",
+    "nodemon": "^2.0.6",
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
