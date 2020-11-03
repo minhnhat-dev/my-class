@@ -1,6 +1,6 @@
 const path = require('path');
 const express = require('express');
-const cookieParser = require('cookie-parser') ;
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -8,33 +8,32 @@ const errorhandler = require('errorhandler');
 const notifier = require('node-notifier');
 const compression = require('compression');
 const responseTime = require('response-time');
-const {authention} = require('./middlewares/authention');
-const {loginFacebook} = require('./middlewares/login.facebook');
-const {loginGoogle} = require('./middlewares/login.google');
-const routes = require('./routes');
-const {errorMiddleware} = require('./middlewares/error-handlers');
-const mongoose = require(path.resolve('./db-helpers/mongoose-init'));
 const session = require('express-session');
-const PostsMD = require(path.resolve('./models/posts.model.js'));
 const passport = require('passport');
+const { loginFacebook } = require('./middlewares/login.facebook');
+const { loginGoogle } = require('./middlewares/login.google');
+const routes = require('./routes');
+const { errorMiddleware } = require('./middlewares/error-handlers');
 
-var app = express();
+const datasouces = require('./datasources');
+
+
+const app = express();
 /* connect database */
-mongoose.connect();
 
 /* apply auth facebook, google */
 loginFacebook(passport);
 loginGoogle(passport);
 
-passport.serializeUser(function(user, cb) {
+passport.serializeUser((user, cb) => {
   cb(null, user);
 });
 
-passport.deserializeUser(function(obj, cb) {
+passport.deserializeUser((obj, cb) => {
   cb(null, obj);
 });
 
-app.use(session({secret: 'secret', resave: true, saveUninitialized: true}));
+app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -56,20 +55,20 @@ app.use(responseTime());
 
 /* routes */
 app.get('/',
-  function(req, res) {
+  (req, res) => {
     // console.log('req.session', req.session.passport);
     res.render(path.resolve('./views/index.ejs'));
   });
 
 
-app.route('/login').get(async function (req, res) {
+app.route('/login').get(async (req, res) => {
   res.render(path.resolve('./views/user/login.ejs'));
 });
 
 /* login with facebook */
 app.get('/auth/facebook',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
-  function(req, res) {
+  (req, res) => {
     res.redirect('/');
   });
 
@@ -82,7 +81,7 @@ app.get('/login/google',
 
 app.get('/auth/google',
   passport.authenticate('google', { failureRedirect: '/login' }),
-  function(req, res) {
+  (req, res) => {
     res.redirect('/');
   });
 
@@ -90,12 +89,12 @@ app.get('/auth/google',
 app.use(routes);
 app.use(errorMiddleware);
 app.use(errorhandler({ log: errorNotification }));
-function errorNotification (err, str, req) {
-  var title = 'Error in ' + req.method + ' ' + req.url;
+function errorNotification(err, str, req) {
+  const title = `Error in ${req.method} ${req.url}`;
 
   notifier.notify({
-    title: title,
-    message: str
+    title,
+    message: str,
   });
 }
 
