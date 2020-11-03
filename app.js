@@ -14,16 +14,16 @@ const { loginFacebook } = require('./middlewares/login.facebook');
 const { loginGoogle } = require('./middlewares/login.google');
 const routes = require('./routes');
 const { errorMiddleware } = require('./middlewares/error-handlers');
-
-const datasouces = require('./datasources');
+require('express-async-errors');
+require('./datasources');
 
 
 const app = express();
 /* connect database */
 
 /* apply auth facebook, google */
-loginFacebook(passport);
-loginGoogle(passport);
+// loginFacebook(passport);
+// loginGoogle(passport);
 
 passport.serializeUser((user, cb) => {
   cb(null, user);
@@ -88,14 +88,5 @@ app.get('/auth/google',
 
 app.use(routes);
 app.use(errorMiddleware);
-app.use(errorhandler({ log: errorNotification }));
-function errorNotification(err, str, req) {
-  const title = `Error in ${req.method} ${req.url}`;
-
-  notifier.notify({
-    title,
-    message: str,
-  });
-}
 
 module.exports = app;
