@@ -1,14 +1,15 @@
 {
-  "$id": "input-create-posts.json#",
+  "$id": "input-login.json#",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["user"],
+  "required": ["email", "password"],
   "minProperties": 1,
   "properties": {
-    "user": {
-      "type": "string"
+    "email": {
+      "type": "string",
+      "format": "email"
     },
-    "text": {
+    "password": {
       "type": "string"
     }
   },

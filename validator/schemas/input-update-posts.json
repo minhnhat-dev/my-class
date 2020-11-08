@@ -1,13 +1,10 @@
 {
-  "$id": "input-create-posts.json#",
+  "$id": "input-update-posts.json#",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["user"],
+  "required": [],
   "minProperties": 1,
   "properties": {
-    "user": {
-      "type": "string"
-    },
     "text": {
       "type": "string"
     }

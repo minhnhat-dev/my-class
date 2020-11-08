@@ -5,9 +5,7 @@ const crypto = require('crypto');
 const { isEmail } = require('validator');
 
 const UserSchema = new Schema({
-  fullName: String,
-  firstName: String,
-  lastName: String,
+  name: String,
   phone: String,
 
   salt: { type: String, required: true },
@@ -38,7 +36,6 @@ const UserSchema = new Schema({
   facebookId: String,
   googleId: String,
 }, { versionKey: false, timestamps: true });
-
 
 UserSchema.methods.setPassword = function createPassword(password) {
   this.salt = crypto.randomBytes(16).toString('hex');

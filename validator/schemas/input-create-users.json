@@ -5,10 +5,7 @@
   "required": ["email", "password"],
   "minProperties": 1,
   "properties": {
-    "firstName": {
-      "type": "string"
-    },
-    "lastName": {
+    "name": {
       "type": "string"
     },
     "email": {

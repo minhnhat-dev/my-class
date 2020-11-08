@@ -1,5 +1,3 @@
-
-
 const Ajv = require('ajv');
 const createError = require('http-errors');
 const schemas = require('./schemas');
@@ -15,8 +13,6 @@ const _validatePassword = (password) => {
   );
   return strongRegex.test(password);
 };
-
-
 ajv.addSchema(schemas);
 /* add validate password */
 ajv.addKeyword('passwordChecker', {
@@ -53,13 +49,13 @@ ajv.addKeyword('passwordChecker', {
  * @return {object} The data is valid
  */
 function validate(name, data) {
+  console.log('name', name);
   const validator = ajv.getSchema(`${name}.json`);
   console.log('validator', validator);
   const valid = validator(data);
   const newError = new createError.BadRequest('Validation failed');
   newError.code = 'INVALID_PARAMETERS';
   newError.details = validator.errors;
-  console.log('valid', valid);
   if (!valid) {
     throw newError;
   }

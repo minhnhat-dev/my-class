@@ -1,4 +1,3 @@
-
 const other = require('./other');
 
 const logger = {
@@ -11,8 +10,7 @@ const logger = {
 
 const JWT_SECRET = 'SECRET_KEY_WEB_REVIEW';
 
-const expire = params => Date.now() + 1000 * 60 * 60 * 24 * params;
-
+const expire = (params) => Date.now() + 1000 * 60 * 60 * 24 * params;
 
 const accessTokenData = {
   iss: '321xem.com',

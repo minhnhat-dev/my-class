@@ -4,8 +4,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
-const errorhandler = require('errorhandler');
-const notifier = require('node-notifier');
 const compression = require('compression');
 const responseTime = require('response-time');
 const session = require('express-session');
@@ -14,9 +12,9 @@ const { loginFacebook } = require('./middlewares/login.facebook');
 const { loginGoogle } = require('./middlewares/login.google');
 const routes = require('./routes');
 const { errorMiddleware } = require('./middlewares/error-handlers');
+const { verifyToken } = require('./middlewares/authentication');
 require('express-async-errors');
 require('./datasources');
-
 
 const app = express();
 /* connect database */
@@ -36,7 +34,6 @@ passport.deserializeUser((obj, cb) => {
 app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -59,7 +56,6 @@ app.get('/',
     // console.log('req.session', req.session.passport);
     res.render(path.resolve('./views/index.ejs'));
   });
-
 
 app.route('/login').get(async (req, res) => {
   res.render(path.resolve('./views/user/login.ejs'));
@@ -84,7 +80,6 @@ app.get('/auth/google',
   (req, res) => {
     res.redirect('/');
   });
-
 
 app.use(routes);
 app.use(errorMiddleware);
