@@ -14,7 +14,7 @@ function signAccessToken(user) {
   }, JWT_SECRET);
 }
 
-async function verifyToken(req, res, next) {
+function verifyToken(req, res, next) {
   let error;
   const token = req.headers.authorization || '';
   /* Verify access token */
@@ -22,12 +22,12 @@ async function verifyToken(req, res, next) {
     if (err) {
       error = new createError.Unauthorized('Access token expired');
       error.code = 'ACCESS_TOKEN_EXPIRED';
-      return next(error);
+      next(error);
     }
     req.userId = decoded.id;
     req.token = token;
     req.decoded = decoded;
-    return next();
+    next();
   });
 }
 

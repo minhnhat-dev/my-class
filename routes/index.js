@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.use('/', login);
 router.use('/users', users);
+
 router.use('/posts', posts);
 router.use('/profiles', profiles);
 

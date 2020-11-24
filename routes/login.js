@@ -1,11 +1,19 @@
 const CreateError = require('http-errors');
 const express = require('express');
 const { Users } = require('../datasources/mongodb/models');
-const { signAccessToken } = require('../middlewares/authentication');
+const { signAccessToken, verifyToken } = require('../middlewares/authentication');
 require('express-async-errors');
 const { validate } = require('../validator');
 
 const router = express.Router();
+
+// @route    GET /auth
+// @desc     Get user by token
+// @access   Private
+router.get('/auth', verifyToken, async (req, res) => {
+  const user = await Users.findById(req.userId).select('-hash -salt').lean();
+  return res.status(200).send({ data: user });
+});
 
 router.post('/register', async (req, res) => {
   const { body } = req;
