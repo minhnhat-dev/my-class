@@ -3,11 +3,11 @@ import store from '../store';
 import { LOGOUT, SET_ALERT } from '../actions/types';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000',
-  headers: {
-    'Content-Type': 'application/json',
-    'Clear-Site-Data': '*',
-  },
+    baseURL: 'http://localhost:5000',
+    headers: {
+        'Content-Type': 'application/json',
+        'Clear-Site-Data': '*'
+    }
 });
 
 /**
@@ -18,15 +18,15 @@ const api = axios.create({
  logout the user if the token has expired
 * */
 api.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    const { message } = err.response.data;
-    store.dispatch({ type: SET_ALERT, error: { message } });
-    if (err.response.status === 401) {
-      store.dispatch({ type: LOGOUT });
+    (res) => res,
+    (err) => {
+        const { message } = err.response.data;
+        store.dispatch({ type: SET_ALERT, error: { message } });
+        if (err.response.status === 401) {
+            store.dispatch({ type: LOGOUT });
+        }
+        return Promise.reject(err);
     }
-    return Promise.reject(err);
-  },
 );
 
 export default api;

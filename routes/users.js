@@ -1,13 +1,14 @@
 const express = require('express');
+
+const router = express.Router();
 const _ = require('lodash');
 const CreateError = require('http-errors');
 const { verifyToken } = require('../middlewares/authentication');
 const { validate } = require('../validator');
 const { Posts } = require('../datasources/mongodb/models');
 const { buildTextSearch } = require('../utils');
-const Users = require('../datasources/mongodb/models/Users');
+const { Users } = require('../datasources/mongodb/models');
 
-const router = express.Router();
 require('express-async-errors');
 
 router.use(verifyToken);

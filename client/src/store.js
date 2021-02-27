@@ -9,9 +9,9 @@ const initialState = {};
 const middleware = [thunk];
 
 const store = createStore(
-  rootReducer,
-  initialState,
-  composeWithDevTools(applyMiddleware(...middleware)),
+    rootReducer,
+    initialState,
+    composeWithDevTools(applyMiddleware(...middleware))
 );
 
 // set up a store subscription listener
@@ -22,14 +22,14 @@ const store = createStore(
 let currentState = store.getState();
 
 store.subscribe(() => {
-  // keep track of the previous and current state to compare changes
-  const previousState = currentState;
-  currentState = store.getState();
-  // if the token changes set the value in localStorage and axios headers
-  if (previousState.auth.token !== currentState.auth.token) {
-    const { token } = currentState.auth;
-    setAuthToken(token);
-  }
+    // keep track of the previous and current state to compare changes
+    const previousState = currentState;
+    currentState = store.getState();
+    // if the token changes set the value in localStorage and axios headers
+    if (previousState.auth.token !== currentState.auth.token) {
+        const { token } = currentState.auth;
+        setAuthToken(token);
+    }
 });
 
 export default store;
