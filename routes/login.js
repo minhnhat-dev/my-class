@@ -4,26 +4,33 @@ const { Users } = require('../datasources/mongodb/models');
 const { signAccessToken, verifyToken } = require('../middlewares/authentication');
 require('express-async-errors');
 const { validate } = require('../validator');
+const { userValidator } = require('../validator');
+const { userConstant } = require('../constants');
 
 const router = express.Router();
 
-// @route    GET /auth
+// @route    GET /authenticate
 // @desc     Get user by token
 // @access   Private
-router.get('/auth', verifyToken, async (req, res) => {
-    console.log('req.userId', req.userId);
-    const user = await Users.findById(req.userId).select('-hash -salt').lean();
-    console.log('user', user);
-    return res.status(200).send({ data: user });
+router.post('/login/:type', async (req, res) => {
+    const { type } = req.params;
+    let result = {};
+    if (type === userConstant.TYPES.FACEBOOK) {
+        result = await userValidator.validateAccessTokenFaceBook(req.body);
+    }
+    return res.status(200).send(result);
 });
 
 router.post('/register', async (req, res) => {
+    console.log(1);
     const { body } = req;
     validate('input-create-users', body);
 
     // check gmail exist
     const { email, password } = body;
+    console.log('email', email);
     const count = await Users.countDocuments({ email });
+    console.log('count', count);
     if (count) {
         throw new CreateError(
             400,
@@ -32,7 +39,7 @@ router.post('/register', async (req, res) => {
         );
     }
     const user = new Users(body);
-    user.role = 'Admin';
+    user.roles = ['Normal'];
     user.setPassword(password);
     const token = signAccessToken(user);
     await user.save();

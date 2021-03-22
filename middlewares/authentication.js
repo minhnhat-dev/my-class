@@ -6,7 +6,6 @@ const {
 } = require('../configs');
 
 function signAccessToken(user) {
-    console.log('user', user);
     return jwt.sign({
         iss: 'minhnhat.dev',
         id: user._id

@@ -1,9 +1,19 @@
 const Ajv = require('ajv');
 const createError = require('http-errors');
 const schemas = require('./schemas');
+const userValidator = require('./user.validator');
 
-const ajv = new Ajv({ allErrors: true, useDefaults: true });
-require('ajv-errors')(ajv /* , {singleError: true} */);
+const ajv = new Ajv({
+    allErrors: true,
+    useDefaults: true,
+    removeAdditional: true,
+    async: true,
+    jsonPointers: true,
+    passContext: true,
+    coerceTypes: true
+});
+require('ajv-errors')(ajv);
+// require('ajv-bsontype')(ajv);
 /**
  * Validate password
  */
@@ -60,6 +70,37 @@ function validate(name, data) {
     return data;
 }
 
+function validateSchema(schema, path = 'body') {
+    schema.$async = true;
+    return async function (req, res, next) {
+        try {
+            await ajv.validate(schema, req[path]);
+            next();
+        } catch (err) {
+            if (!(err instanceof Ajv.ValidationError)) {
+                return next(createError.InternalServerError(err.message));
+            }
+            next(createError.UnprocessableEntity(err));
+        }
+    };
+}
+
+function validateBody(schema) {
+    return validateSchema(schema, 'body');
+}
+
+function validateQuery(schema) {
+    return validateSchema(schema, 'query');
+}
+
+function validateParams(schema) {
+    return validateSchema(schema, 'params');
+}
+
 module.exports = {
-    validate
+    validate,
+    validateBody,
+    validateQuery,
+    validateParams,
+    userValidator
 };

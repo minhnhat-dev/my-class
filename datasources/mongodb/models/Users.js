@@ -16,11 +16,7 @@ const UserSchema = new Schema({
         default: 'active',
         enum: ['active', 'disabled']
     },
-    roles: {
-        type: String,
-        required: true,
-        enum: []
-    },
+    roles: [String],
     facebookId: String,
     googleId: String
 }, { versionKey: false, timestamps: true });

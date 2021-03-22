@@ -20,15 +20,15 @@ const app = express();
 /* connect database */
 
 /* apply auth facebook, google */
-// loginFacebook(passport);
+loginFacebook(passport);
 // loginGoogle(passport);
 
 passport.serializeUser((user, cb) => {
-  cb(null, user);
+    cb(null, user);
 });
 
 passport.deserializeUser((obj, cb) => {
-  cb(null, obj);
+    cb(null, obj);
 });
 
 app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
@@ -52,34 +52,37 @@ app.use(responseTime());
 
 /* routes */
 app.get('/',
-  (req, res) => {
+    (req, res) => {
     // console.log('req.session', req.session.passport);
-    res.render(path.resolve('./views/index.ejs'));
-  });
+        res.render(path.resolve('./views/index.ejs'));
+    });
 
 app.route('/login').get(async (req, res) => {
-  res.render(path.resolve('./views/user/login.ejs'));
+    res.render(path.resolve('./views/user/login.ejs'));
 });
-
 /* login with facebook */
-app.get('/auth/facebook',
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
-  (req, res) => {
-    res.redirect('/');
-  });
-
-app.get('/login/facebook',
-  passport.authenticate('facebook'));
-
+app.get('/login/facebook', passport.authenticate('facebook'));
 /* login with google */
-app.get('/login/google',
-  passport.authenticate('google', { scope: ['profile', 'email', 'openid'] }));
+app.get('/login/google', passport.authenticate('google', { scope: ['profile', 'email', 'openid'] }));
 
-app.get('/auth/google',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  (req, res) => {
-    res.redirect('/');
-  });
+/* callback login with facebook */
+app.get(
+    '/auth/facebook',
+    passport.authenticate('facebook', { failureRedirect: '/login' }),
+    (req, res) => {
+        const { user } = req;
+        res.send(user);
+    }
+);
+
+/* callback login with facebook */
+app.get(
+    '/auth/google',
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    (req, res) => {
+        res.redirect('/');
+    }
+);
 
 app.use(routes);
 app.use(errorMiddleware);
