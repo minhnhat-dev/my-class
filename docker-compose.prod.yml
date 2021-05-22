@@ -1,12 +1,13 @@
 version: "3"
-
-services:
+services: 
   node-server:
-    build: .
-    ports:
-      - "3000:3000"
+    build:
+      context: .
+      args:
+        NODE_ENV: production
     environment:
-      - PORT=3000
+      - NODE_ENV=production
+    command: node index.js
     depends_on: 
       - mongodb
     restart: always
@@ -14,12 +15,8 @@ services:
     image: mongo:4.2
     ports:
       - "27017:27017"
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=nhatnguyen
-      - MONGO_INITDB_ROOT_PASSWORD=mypassword
     volumes: 
       - mongodb:/data/db
     restart: always
 volumes:
   mongodb:
-  

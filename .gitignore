@@ -5,6 +5,7 @@
 
 # misc
 .idea
+./history
 /logs
 .nyc_output/
 

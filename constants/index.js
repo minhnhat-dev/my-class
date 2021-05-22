@@ -1,4 +1,4 @@
-const userConstant = require('./user.constant');
+const userConstant = require('./users.constant');
 
 module.exports = {
     userConstant

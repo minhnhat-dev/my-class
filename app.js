@@ -8,6 +8,8 @@ const compression = require('compression');
 const responseTime = require('response-time');
 const session = require('express-session');
 const passport = require('passport');
+const socketio = require('socket.io');
+const http = require('http');
 const { loginFacebook } = require('./middlewares/login.facebook');
 const { loginGoogle } = require('./middlewares/login.google');
 const routes = require('./routes');
@@ -34,7 +36,8 @@ passport.deserializeUser((obj, cb) => {
 app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use(require('./middlewares/redact'));
+app.use(require('./middlewares/normalize-mongoose'));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -56,6 +59,10 @@ app.get('/',
     // console.log('req.session', req.session.passport);
         res.render(path.resolve('./views/index.ejs'));
     });
+
+app.get('/ping', (req, res) => {
+    res.status(200).send({ message: `Pong ${process.env.PORT}` });
+});
 
 app.route('/login').get(async (req, res) => {
     res.render(path.resolve('./views/user/login.ejs'));
@@ -83,6 +90,16 @@ app.get(
         res.redirect('/');
     }
 );
+
+app.get('/rooms/:roomId/users', (req, res) => {
+    console.log('users');
+    return res.json({ message: 'users' });
+});
+
+app.get('/rooms/:roomId/message', (req, res) => {
+    console.log('message');
+    return res.json({ message: 'message' });
+});
 
 app.use(routes);
 app.use(errorMiddleware);

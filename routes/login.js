@@ -3,8 +3,8 @@ const express = require('express');
 const { Users } = require('../datasources/mongodb/models');
 const { signAccessToken, verifyToken } = require('../middlewares/authentication');
 require('express-async-errors');
-const { validate } = require('../validator');
-const { userValidator } = require('../validator');
+const { validate } = require('../validators');
+const { userValidator } = require('../validators');
 const { userConstant } = require('../constants');
 
 const router = express.Router();

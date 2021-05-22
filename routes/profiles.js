@@ -6,7 +6,7 @@ const _ = require('lodash');
 const { Users, Profiles } = require('../datasources/mongodb/models');
 const { signAccessToken } = require('../middlewares/authentication');
 
-const { validate } = require('../validator');
+const { validate } = require('../validators');
 
 const router = express.Router();
 

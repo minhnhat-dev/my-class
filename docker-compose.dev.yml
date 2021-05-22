@@ -1,12 +1,20 @@
 version: "3"
-
-services:
+services: 
   node-server:
-    build: .
+    build:
+      context: .
+      args:
+        NODE_ENV: development
     ports:
       - "3000:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
     environment:
-      - PORT=3000
+      - NODE_ENV=development
+      - MONGO_USER=nhatnguyen
+      - MONGO_PASSWORD=mypassword
+    command: npm run start-dev
     depends_on: 
       - mongodb
     restart: always
@@ -22,4 +30,3 @@ services:
     restart: always
 volumes:
   mongodb:
-  

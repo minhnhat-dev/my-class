@@ -5,10 +5,8 @@
   "scripts": {
     "client-install": "npm install --prefix client",
     "start": "node index.js",
-    "start-local": "NODE_ENV=test PORT=5000 DATABASE_TEST='mongodb://localhost/my_class_test' nodemon index.js",
-    "start-server": "NODE_ENV=test PORT=5000 DATABASE_TEST='mongodb://localhost/my_class_test' node index.js",
-    "start-client": "npm start --prefix client",
-    "dev": "concurrently \"npm run start-server\" \"npm run start-client\""
+    "start-dev": "NODE_ENV=development nodemon index.js",
+    "start-local": "NODE_ENV=localhost nodemon index.js"
   },
   "dependencies": {
     "ajv": "^6.12.2",
@@ -26,21 +24,24 @@
     "debug": "~2.6.9",
     "ejs": "~2.5.7",
     "errorhandler": "^1.5.1",
+    "escape-string-regexp": "^4.0.0",
     "eslint": "^7.13.0",
     "express": "~4.16.0",
     "express-async-errors": "^3.1.1",
+    "express-mung": "^0.5.1",
     "express-session": "^1.17.1",
     "faker": "^5.4.0",
+    "http": "0.0.1-security",
     "http-errors": "~1.6.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
     "mongoose": "^5.9.19",
     "mongoose-auto-increment": "^5.0.1",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
     "node-notifier": "^7.0.1",
-    "nodemon": "^2.0.6",
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
@@ -48,6 +49,10 @@
     "react-moment": "^1.1.1",
     "react-router-dom": "^5.2.0",
     "response-time": "^2.3.2",
+    "socket.io": "^4.0.0",
     "validator": "^13.1.17"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }
