@@ -83,7 +83,7 @@ app.get('/',
 
 app.get('/ping', (req, res) => {
     console.log('Accept ping !');
-    res.status(200).send({ message: `Pong ${process.env.PORT}` });
+    res.status(200).send({ message: `Pong ${process.env.PORT} !!!` });
 });
 
 app.route('/login').get(async (req, res) => {
