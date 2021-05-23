@@ -1,5 +1,8 @@
 version: "3"
 services: 
+  nginx:
+    ports:
+      - "80:80" # cung cấp các port mapping vs nginx 80
   node-server:
     build:
       context: .

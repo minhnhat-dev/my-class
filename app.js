@@ -9,7 +9,10 @@ const responseTime = require('response-time');
 const session = require('express-session');
 const passport = require('passport');
 const socketio = require('socket.io');
+const redis = require('redis');
+const RedisStore = require('connect-redis')(session);
 const http = require('http');
+const { REDIS_PORT, REDIS_URL, SESSION_SECRET } = require('./datasources/redis/configs');
 const { loginFacebook } = require('./middlewares/login.facebook');
 const { loginGoogle } = require('./middlewares/login.google');
 const routes = require('./routes');
@@ -18,9 +21,13 @@ const { verifyToken } = require('./middlewares/authentication');
 require('express-async-errors');
 require('./datasources');
 
+const redisClient = redis.createClient({
+    host: REDIS_URL,
+    port: REDIS_PORT
+});
+
 const app = express();
 /* connect database */
-
 /* apply auth facebook, google */
 loginFacebook(passport);
 // loginGoogle(passport);
@@ -32,10 +39,10 @@ passport.serializeUser((user, cb) => {
 passport.deserializeUser((obj, cb) => {
     cb(null, obj);
 });
-
-app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());
+/* passport session */
+// app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
+// app.use(passport.initialize());
+// app.use(passport.session());
 app.use(require('./middlewares/redact'));
 app.use(require('./middlewares/normalize-mongoose'));
 // view engine setup
@@ -53,6 +60,20 @@ app.use(cors());
 app.use(compression());
 app.use(responseTime());
 
+/* use redis session */
+app.enable('trust proxy');
+app.use(session({
+    store: new RedisStore({ client: redisClient }),
+    secret: SESSION_SECRET,
+    cookie: {
+        resave: false,
+        httpOnly: true,
+        secure: false,
+        saveUninitialized: false,
+        maxAge: 300000 // 300s
+    }
+}));
+
 /* routes */
 app.get('/',
     (req, res) => {
@@ -61,6 +82,7 @@ app.get('/',
     });
 
 app.get('/ping', (req, res) => {
+    console.log('Accept ping !');
     res.status(200).send({ message: `Pong ${process.env.PORT}` });
 });
 

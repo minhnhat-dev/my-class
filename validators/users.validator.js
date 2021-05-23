@@ -49,7 +49,25 @@ async function validateCreateUser(body) {
     return body;
 }
 
+async function validateUserLogin(body) {
+    const { email, password } = body;
+    const user = await Users.findOne({ email });
+
+    if (!user) {
+        throw new CreateError.NotFound('error_user_not_found');
+    }
+
+    const isCorrect = await user.validatePassword(password);
+
+    if (!isCorrect) {
+        throw new CreateError.BadRequest('error_password_invalid');
+    }
+    const token = signAccessToken(user);
+    return { user, token };
+}
+
 module.exports = {
     validateAccessTokenFaceBook,
-    validateCreateUser
+    validateCreateUser,
+    validateUserLogin
 };

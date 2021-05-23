@@ -54,8 +54,23 @@ const getList = {
     }
 };
 
+const login = {
+    type: 'object',
+    required: ['email', 'password'],
+    properties: {
+        email: {
+            type: 'string',
+            format: 'email'
+        },
+        password: {
+            type: 'string'
+        }
+    }
+};
+
 module.exports = {
     create,
     update,
-    getList
+    getList,
+    login
 };

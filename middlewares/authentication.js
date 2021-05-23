@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const jwt = require('jsonwebtoken');
+const { functions } = require('lodash');
 require('express-async-errors');
 const {
     JWT_SECRET
@@ -32,7 +33,19 @@ function verifyToken(req, res, next) {
     }
 }
 
+function verifySession(req, res, next) {
+    const { user } = req.session;
+
+    if (!user) {
+        throw new createError.Unauthorized('Access session expired');
+    }
+
+    req.user = user;
+    next();
+}
+
 module.exports = {
     verifyToken,
-    signAccessToken
+    signAccessToken,
+    verifySession
 };

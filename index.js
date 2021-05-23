@@ -2,8 +2,8 @@ const app = require('./app');
 const configs = require('./configs');
 const { startSocketioServer } = require('./socketio');
 
-const server = app.listen(configs.port, configs.hostName, () => {
-    console.log(`🚀 Running on host ${configs.hostName}:${configs.port}`);
+const server = app.listen(configs.port, () => {
+    console.log(`🚀 Running on port ${configs.port}`);
 });
 
 // startSocketioServer();

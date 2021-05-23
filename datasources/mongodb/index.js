@@ -5,7 +5,7 @@ const controllers = require('./controllers');
 const utils = require('./utils');
 
 let url = config.MONGO_LOCALHOST;
-
+console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 if (process.env.NODE_ENV === 'development') {
     url = `mongodb://${config.MONGO_USER}:${config.MONGO_PASSWORD}@${config.MONGO_IP}:${config.MONGO_PORT}/${config.MONGO_DB_NAME}?authSource=admin`;
 }

@@ -1,12 +1,21 @@
 version: "3"
 
 services:
+  nginx:
+    image: nginx:stable-alpine
+    restart: always
+    depends_on:
+      - node-server
+    ports:
+      - "80:80"
+    volumes: 
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
   node-server:
     build: .
-    ports:
-      - "3000:3000"
     environment:
       - PORT=3000
+    expose:
+      - "3000"
     depends_on: 
       - mongodb
     restart: always
@@ -20,6 +29,8 @@ services:
     volumes: 
       - mongodb:/data/db
     restart: always
+  redis:
+    image: redis:6.2.3
 volumes:
   mongodb:
   
