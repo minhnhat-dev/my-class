@@ -1,0 +1,31 @@
+version: "3"
+services: 
+  nginx:
+    ports:
+      - "80:80" # cung cấp các port mapping vs nginx 80
+  node-server:
+    build:
+      context: .
+      args:
+        NODE_ENV: production
+    environment:
+      - NODE_ENV=production
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - SESSION_SECRET=${SESSION_SECRET}
+    command: node index.js
+    depends_on: 
+      - mongodb
+    restart: always
+  mongodb:
+    image: mongo:4.2
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    volumes: 
+      - mongodb:/data/db
+    restart: always
+volumes:
+  mongodb:

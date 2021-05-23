@@ -1,0 +1,118 @@
+{
+  "$id": "input-update-profiles.json#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [],
+  "minProperties": 1,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 24,
+      "maxLength": 24,
+      "pattern": "^[0-9a-fA-F]{24}$"
+    },
+    "handle": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+     "website": {
+      "type": "string"
+    },
+     "location": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Show", "Hide"]
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "experiences": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["projectName", "technologyUsed", "location", "status"],
+        "properties": {
+          "projectName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "technologyUsed": {
+            "type":"string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type":"string"
+          },
+          "status": {
+            "type":"string",
+            "enum": ["Done", "In Process", "Pending"]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "educations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+       "type": "object",
+       "required": ["school"],
+       "properties": {
+        "school": {
+          "type": "string"
+        },
+        "degree": {
+          "type": "string"
+        },
+        "major": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        }
+       }
+      },
+      "additionalProperties": false
+     },
+    "social": {
+        "type": "object",
+        "properties": {
+          "youtube": {
+            "type": "string"
+          },
+          "twitter": {
+            "type": "string"
+          },
+          "facebook": {
+            "type": "string"
+          },
+          "linkedIn": {
+            "type": "string"
+          },
+          "instagram": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+  },
+  "additionalProperties": false
+}

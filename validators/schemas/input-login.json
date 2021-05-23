@@ -1,0 +1,17 @@
+{
+  "$id": "input-login.json#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["email", "password"],
+  "minProperties": 1,
+  "properties": {
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "password": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

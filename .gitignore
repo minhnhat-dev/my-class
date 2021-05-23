@@ -2,9 +2,9 @@
 /node_modules
 
 
-
 # misc
 .idea
+./history
 /logs
 .nyc_output/
 

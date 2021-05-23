@@ -1,0 +1,41 @@
+version: "3"
+services:
+  nginx:
+    image: nginx:stable-alpine
+    ports: 
+      - "80:80"
+  node-server:
+    build:
+      context: .
+      args:
+        NODE_ENV: development
+    environment:
+      - PORT=3000
+    expose:
+      - "3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - MONGO_USER=nhatnguyen
+      - MONGO_PASSWORD=mypassword
+      - SESSION_SECRET=secret
+    command: npm run start-dev
+    depends_on: 
+      - mongodb
+    restart: always
+  mongodb:
+    image: mongo:4.2
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=nhatnguyen
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+    volumes: 
+      - mongodb:/data/db
+    restart: always
+  redis:
+    image: redis:6.2.3
+volumes:
+  mongodb:
