@@ -1,7 +1,7 @@
 # dependencies
 /node_modules
 
-
+*docker-compose*
 
 # misc
 .idea
