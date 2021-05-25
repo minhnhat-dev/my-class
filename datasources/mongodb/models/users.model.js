@@ -17,7 +17,9 @@ const UserSchema = new Schema({
         enum: Object.values(STATUS)
     },
     facebookId: String,
-    googleId: String
+    googleId: String,
+    profilePicture: String,
+    coverPicture: String
 }, { versionKey: false, timestamps: true });
 
 UserSchema.methods.setPassword = function createPassword(password) {

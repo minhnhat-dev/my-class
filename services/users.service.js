@@ -43,7 +43,11 @@ async function getListUsers(query) {
     return { users, total };
 }
 
+async function getUser(id) {
+    const user = await Users.findById(id).lean();
+}
 module.exports = {
     createUser,
-    getListUsers
+    getListUsers,
+    getUser
 };

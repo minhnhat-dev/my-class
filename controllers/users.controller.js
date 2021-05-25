@@ -2,7 +2,7 @@
 const { functions } = require('lodash');
 const { validateBody } = require('../validators');
 const { Users } = require('../datasources/mongodb/models');
-const { validateCreateUser, validateUserLogin } = require('../validators/users.validator');
+const { validateCreateUser, validateUserLogin, validateUser } = require('../validators/users.validator');
 const { usersServices } = require('../services');
 
 async function createUser(req, res, next) {
@@ -15,10 +15,6 @@ async function createUser(req, res, next) {
 }
 
 function updateUser(params) {
-
-}
-
-function getUser(params) {
 
 }
 
@@ -35,10 +31,20 @@ async function login(req, res, next) {
     const { user, token } = await validateUserLogin(req.body);
     /* add infomation user to redis */
     req.session.user = user;
-    return res.status(200).send({
-        data: user,
-        token
-    });
+    user.token = token;
+    return res.status(200).send(user);
+}
+
+async function getUser(req, res, next) {
+    const { id } = req.params;
+    const user = await validateUser(id);
+    return res.status(200).send(user);
+}
+
+async function deleteUser(req, res, next) {
+    const { id } = req.params;
+    const user = await validateUser(id);
+    return res.status(200).send(user);
 }
 
 module.exports = {
@@ -46,5 +52,6 @@ module.exports = {
     updateUser,
     getUser,
     getUsers,
-    login
+    login,
+    deleteUser
 };

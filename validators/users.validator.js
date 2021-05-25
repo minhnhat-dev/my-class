@@ -66,8 +66,19 @@ async function validateUserLogin(body) {
     return { user, token };
 }
 
+async function validateUser(id) {
+    const user = await Users.findById(id).lean();
+
+    if (!user) {
+        throw new CreateError.NotFound('error_user_not_found');
+    }
+
+    return user;
+}
+
 module.exports = {
     validateAccessTokenFaceBook,
     validateCreateUser,
-    validateUserLogin
+    validateUserLogin,
+    validateUser
 };

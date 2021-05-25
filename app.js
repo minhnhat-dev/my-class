@@ -29,7 +29,7 @@ const redisClient = redis.createClient({
 const app = express();
 /* connect database */
 /* apply auth facebook, google */
-loginFacebook(passport);
+// loginFacebook(passport);
 // loginGoogle(passport);
 
 passport.serializeUser((user, cb) => {
@@ -50,7 +50,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(morgan('dev'));
+app.use(morgan('common'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -74,53 +74,11 @@ app.use(session({
     }
 }));
 
-/* routes */
-app.get('/',
-    (req, res) => {
-    // console.log('req.session', req.session.passport);
-        res.render(path.resolve('./views/index.ejs'));
-    });
+app.get('/', (req, res) => { res.render(path.resolve('./views/index.ejs')); });
 
 app.get('/ping', (req, res) => {
     console.log('Accept ping !');
-    res.status(200).send({ message: `Pong ${process.env.PORT} !!!` });
-});
-
-app.route('/login').get(async (req, res) => {
-    res.render(path.resolve('./views/user/login.ejs'));
-});
-/* login with facebook */
-app.get('/login/facebook', passport.authenticate('facebook'));
-/* login with google */
-app.get('/login/google', passport.authenticate('google', { scope: ['profile', 'email', 'openid'] }));
-
-/* callback login with facebook */
-app.get(
-    '/auth/facebook',
-    passport.authenticate('facebook', { failureRedirect: '/login' }),
-    (req, res) => {
-        const { user } = req;
-        res.send(user);
-    }
-);
-
-/* callback login with facebook */
-app.get(
-    '/auth/google',
-    passport.authenticate('google', { failureRedirect: '/login' }),
-    (req, res) => {
-        res.redirect('/');
-    }
-);
-
-app.get('/rooms/:roomId/users', (req, res) => {
-    console.log('users');
-    return res.json({ message: 'users' });
-});
-
-app.get('/rooms/:roomId/message', (req, res) => {
-    console.log('message');
-    return res.json({ message: 'message' });
+    res.status(200).send({ message: `Pong ${process.env.PORT} !!! ^^` });
 });
 
 app.use(routes);
