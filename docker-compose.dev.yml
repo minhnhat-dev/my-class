@@ -37,6 +37,5 @@ services:
     restart: always
   redis:
     image: redis:6.2.3
-    command: ["redis-server", "--bind", "redis", "--port", "6379"]
 volumes:
   mongodb:
