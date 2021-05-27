@@ -2,8 +2,9 @@ const axios = require('axios');
 const CreateError = require('http-errors');
 const faker = require('faker');
 const { userConstant } = require('../constants');
-const { Users } = require('../datasources/mongodb/models');
+const { Users, Followers } = require('../datasources/mongodb/models');
 const { signAccessToken, verifyToken } = require('../middlewares/authentication');
+const { ERROR_CODES } = require('../constants/users.constant');
 
 async function validateAccessTokenFaceBook(body) {
     /* Get account id */
@@ -38,12 +39,12 @@ async function validateAccessTokenFaceBook(body) {
 async function validateCreateUser(body) {
     const { email, password, passwordConfirm } = body;
     if (password !== passwordConfirm) {
-        throw new CreateError.BadRequest('error_password_confirm_not_match');
+        throw new CreateError.BadRequest(ERROR_CODES.ERROR_PASSWORD_CONFIRM_NOT_MATCH);
     }
 
     const countEmail = await Users.countDocuments({ email });
     if (countEmail) {
-        throw new CreateError.BadRequest('error_email_already_exists');
+        throw new CreateError.BadRequest(ERROR_CODES.ERROR_EMAIL_ALREADY_EXISTS);
     }
 
     return body;
@@ -54,31 +55,64 @@ async function validateUserLogin(body) {
     const user = await Users.findOne({ email });
 
     if (!user) {
-        throw new CreateError.NotFound('error_user_not_found');
+        throw new CreateError.NotFound(ERROR_CODES.ERROR_USER_NOT_FOUND);
     }
 
     const isCorrect = await user.validatePassword(password);
 
     if (!isCorrect) {
-        throw new CreateError.BadRequest('error_password_invalid');
+        throw new CreateError.BadRequest(ERROR_CODES.ERROR_PASSWORD_INVALID);
     }
     const token = signAccessToken(user);
     return { user, token };
 }
 
 async function validateUser(id) {
-    const user = await Users.findById(id).lean();
+    const user = await Users.findById(id);
 
     if (!user) {
-        throw new CreateError.NotFound('error_user_not_found');
+        throw new CreateError.NotFound(ERROR_CODES.ERROR_USER_NOT_FOUND);
     }
 
     return user;
+}
+
+async function validateUpdateUser(id, body) {
+    const user = await validateUser(id);
+    return body;
+}
+
+async function validateFollowUser(id, body) {
+    const { userId, followerId } = body;
+
+    if (userId === followerId) {
+        throw new CreateError.BadRequest(ERROR_CODES.ERROR_YOU_NOT_FOLLOW_YOURSELF);
+    }
+
+    const user = await validateUser(id);
+    const userFollwer = await validateUser(followerId);
+
+    if (!userFollwer) {
+        throw new CreateError.NotFound(ERROR_CODES.ERROR_USER_NOT_FOUND);
+    }
+
+    const countUserFollwing = await Followers.findOne({
+        userId,
+        followingId: followerId
+    });
+
+    if (countUserFollwing) {
+        throw new CreateError.BadRequest(ERROR_CODES.ERROR_USER_NOT_FOUND);
+    }
+
+    return body;
 }
 
 module.exports = {
     validateAccessTokenFaceBook,
     validateCreateUser,
     validateUserLogin,
-    validateUser
+    validateUser,
+    validateUpdateUser,
+    validateFollowUser
 };

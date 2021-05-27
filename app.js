@@ -78,7 +78,7 @@ app.get('/', (req, res) => { res.render(path.resolve('./views/index.ejs')); });
 
 app.get('/ping', (req, res) => {
     console.log('Accept ping !');
-    res.status(200).send({ message: `Pong ${process.env.PORT} !!! ^^` });
+    res.status(200).send({ message: `Pong ${process.env.PORT} !!! ^^ ^^^^` });
 });
 
 app.use(routes);

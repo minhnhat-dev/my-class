@@ -9,10 +9,11 @@ require('express-async-errors');
 
 // router.use(verifyToken);
 
-router.post('/register', validateBody(usersSchema.create), usersControllers.createUser);
+router.post('/auth/register', validateBody(usersSchema.create), usersControllers.createUser);
+router.post('/auth/login', validateBody(usersSchema.login), usersControllers.login);
 router.get('/', verifySession, validateQuery(usersSchema.getList), usersControllers.getUsers);
-router.post('/login', validateBody(usersSchema.login), usersControllers.login);
-router.put('/:id', usersControllers.getUser);
+router.put('/:id', validateBody(usersSchema.update), usersControllers.updateUser);
+router.post('/:id/follow', validateBody(usersSchema.follow), usersControllers.followUser);
 router.delete('/:id', usersControllers.deleteUser);
 
 module.exports = router;

@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-const { STATUS } = require('../../../constants/users.constant');
+const { STATUS, RELATIONSHIP } = require('../../../constants/users.constant');
 
 const { Schema } = mongoose;
-const crypto = require('crypto');
 
 const UserSchema = new Schema({
     name: String,
@@ -19,7 +18,16 @@ const UserSchema = new Schema({
     facebookId: String,
     googleId: String,
     profilePicture: String,
-    coverPicture: String
+    coverPicture: String,
+    from: String,
+    city: String,
+    description: String,
+    relationship: {
+        type: Number,
+        enum: Object.values(RELATIONSHIP)
+    },
+    totalFollowers: { type: Number, default: 0 },
+    totalFollowings: { type: Number, default: 0 }
 }, { versionKey: false, timestamps: true });
 
 UserSchema.methods.setPassword = function createPassword(password) {

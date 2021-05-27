@@ -1,4 +1,5 @@
 const shared = require('./shared.schema');
+const { RELATIONSHIP } = require('../constants/users.constant');
 
 const create = {
     type: 'object',
@@ -6,19 +7,13 @@ const create = {
         'name', 'email', 'password', 'passwordConfirm'
     ],
     properties: {
-        name: {
-            type: 'string'
-        },
-        email: {
-            type: 'string',
-            format: 'email'
-        },
-        password: {
-            type: 'string'
-        },
-        passwordConfirm: {
-            type: 'string'
-        }
+        name: { type: 'string' },
+        email: { type: 'string', format: 'email' },
+        password: { type: 'string' },
+        passwordConfirm: { type: 'string' },
+        from: { type: 'string' },
+        city: { type: 'string' },
+        description: { type: 'string' }
     }
 };
 
@@ -26,19 +21,14 @@ const update = {
     type: 'object',
     required: [],
     properties: {
-        name: {
-            type: 'string'
-        },
-        email: {
-            type: 'string',
-            format: 'email'
-        },
-        password: {
-            type: 'string'
-        },
-        passwordConfirm: {
-            type: 'string'
-        }
+        name: { type: 'string' },
+        email: { type: 'string', format: 'email' },
+        password: { type: 'string' },
+        passwordConfirm: { type: 'string' },
+        from: { type: 'string' },
+        city: { type: 'string' },
+        description: { type: 'string' },
+        relationship: { type: 'number', enum: Object.values(RELATIONSHIP) }
     }
 };
 
@@ -68,9 +58,18 @@ const login = {
     }
 };
 
+const follow = {
+    type: 'object',
+    properties: {
+        userId: shared.mongoObjectId,
+        followerId: shared.mongoObjectId
+    }
+};
+
 module.exports = {
     create,
     update,
     getList,
-    login
+    login,
+    follow
 };
