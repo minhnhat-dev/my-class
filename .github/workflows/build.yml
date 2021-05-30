@@ -18,7 +18,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       # Build the images
       - name: Build the docker-compose stack
-        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build node-server
+        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d build —-no-deps node-server
       # List images
       - name: List images
         run: docker images
