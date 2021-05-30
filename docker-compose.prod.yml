@@ -4,13 +4,13 @@ services:
     ports:
       - "80:80" # cung cấp các port mapping vs nginx 80
   node-server:
-    deploy:
-      replicas: 2
-      restart_policy:
-        condition: any
-      update_config:
-        parallelism: 2
-        delay: 10s
+    # deploy:
+    #   replicas: 2
+    #   restart_policy:
+    #     condition: any
+    #   update_config:
+    #     parallelism: 2
+    #     delay: 10s
     build:
       context: .
       args:
