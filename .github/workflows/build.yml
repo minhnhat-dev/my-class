@@ -18,7 +18,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       # Build the images
       - name: Build the docker-compose stack
-        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build node-server
       # List images
       - name: List images
         run: docker images
@@ -27,7 +27,7 @@ jobs:
         run: docker ps -a
       # Push images
       - name: Push images
-        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml push
+        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml push node-server
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
