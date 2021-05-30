@@ -16,9 +16,20 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+ 
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
       # Build the images
       - name: Build the docker-compose stack
+        id: docker_build
         run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build node-server
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache
       # List images
       - name: List images
         run: docker images
@@ -28,6 +39,5 @@ jobs:
       # Push images
       - name: Push images
         run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml push node-server
-
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
