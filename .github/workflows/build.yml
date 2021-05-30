@@ -27,9 +27,9 @@ jobs:
       # Build the images
       - name: Build the docker-compose stack
         id: docker_build
-        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build node-server
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
+        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build node-server --cache-from "type=local,src=$GITHUB_WORKSPACE/cache"
+          --cache-to "type=local,dest=$GITHUB_WORKSPACE/cache"
+          --output "type=image, name=your_image:CI,push=false"
       # List images
       - name: List images
         run: docker images
