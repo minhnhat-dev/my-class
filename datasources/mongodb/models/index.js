@@ -1,13 +1,13 @@
 const Users = require('./users.model');
-const Profiles = require('./Profiles');
-const Posts = require('./Posts');
+const Posts = require('./posts.model');
 const Followers = require('./followers.model');
 const Followings = require('./followings.model');
+const Likes = require('./likes.model');
 
 module.exports = {
     Users,
-    Profiles,
-    Posts,
     Followers,
-    Followings
+    Followings,
+    Posts,
+    Likes
 };

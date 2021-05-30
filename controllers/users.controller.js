@@ -7,7 +7,8 @@ const {
     validateUserLogin,
     validateUser,
     validateUpdateUser,
-    validateFollowUser
+    validateFollowUser,
+    validateUnFollowUser
 } = require('../validators/users.validator');
 const { usersServices } = require('../services');
 
@@ -17,7 +18,7 @@ async function createUser(req, res, next) {
     const user = await usersServices.createUser(data);
     /* add infomation user to redis */
     req.session.user = user;
-    return res.status(201).send({ data: user });
+    return res.status(201).send(user);
 }
 
 async function updateUser(req, res, next) {
@@ -27,7 +28,7 @@ async function updateUser(req, res, next) {
     const user = await usersServices.updateUser(id, data);
     /* add infomation user to redis */
     req.session.user = user;
-    return res.status(200).send({ data: user });
+    return res.status(200).send(user);
 }
 
 async function getUsers(req, res, next) {
@@ -66,6 +67,13 @@ async function followUser(req, res, next) {
     return res.status(200).send(user);
 }
 
+async function unfollowUser(req, res, next) {
+    const { id } = req.params;
+    const data = await validateUnFollowUser(id, req.body);
+    const user = await usersServices.handleUnFollow(id, data);
+    return res.status(200).send(user);
+}
+
 module.exports = {
     createUser,
     updateUser,
@@ -73,5 +81,6 @@ module.exports = {
     getUsers,
     login,
     deleteUser,
-    followUser
+    followUser,
+    unfollowUser
 };

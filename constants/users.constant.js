@@ -22,8 +22,10 @@ const ERROR_CODES = {
     ERROR_PASSWORD_CONFIRM_NOT_MATCH: 'error_password_confirm_not_match',
     ERROR_EMAIL_ALREADY_EXISTS: 'error_email_already_exists',
     ERROR_YOU_ALREADY_FOLLOW_THIS: 'error_you_already_follow_this',
+    ERROR_YOU_NOT_FOLLOW_YET: 'error_you_not_follow_yet',
     ERROR_PASSWORD_INVALID: 'error_password_invalid',
-    ERROR_YOU_NOT_FOLLOW_YOURSELF: 'error_you_not_follow_yourself'
+    ERROR_YOU_NOT_FOLLOW_YOURSELF: 'error_you_not_follow_yourself',
+    ERROR_YOU_NOT_UNFOLLOW_YOURSELF: 'error_you_not_unfollow_yourself'
 };
 
 module.exports = {

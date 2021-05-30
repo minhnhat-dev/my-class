@@ -66,10 +66,19 @@ const follow = {
     }
 };
 
+const unFollow = {
+    type: 'object',
+    properties: {
+        userId: shared.mongoObjectId,
+        unFollowerId: shared.mongoObjectId
+    }
+};
+
 module.exports = {
     create,
     update,
     getList,
     login,
-    follow
+    follow,
+    unFollow
 };

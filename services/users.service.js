@@ -1,6 +1,5 @@
 /* eslint-disable radix */
 const { Users, Followers, Followings } = require('../datasources/mongodb/models');
-const { findByIdAndUpdate } = require('../datasources/mongodb/models/Posts');
 const { convertSelectQuery, buildSortStringToObject } = require('../helpers/query.helper');
 
 async function createUser(data) {
@@ -56,28 +55,33 @@ async function updateUser(id, data) {
 async function handleFollow(userId, data) {
     const { followerId } = data;
     /* create follower  */
-    const follower = await Followers.create({ userId: followerId, followerId: userId });
-    /* create following */
-    const following = await Followings.create({ userId, followingId: followerId });
-
+    const [follower, following] = await Promise.all([
+        Followers.create({ userId: followerId, followerId: userId }),
+        Followings.create({ userId, followingId: followerId })
+    ]);
     /* update total follower &  following for user */
-    const userFollowerUpdated = await Users.findByIdAndUpdate(
-        userId,
-        {
-            $set: { $inc: { totalFollowings: 1 } }
-        },
-        { new: true }
-    );
-
-    const userFollowingUpdated = await Users.findByIdAndUpdate(
-        followerId,
-        {
-            $set: { $inc: { totalFollowers: 1 } }
-        },
-        { new: true }
-    );
+    const [userFollowerUpdated, userFollowingUpdated] = await Promise.all([
+        Users.findByIdAndUpdate(userId, { $inc: { totalFollowings: 1 } }, { new: true }),
+        Users.findByIdAndUpdate(followerId, { $inc: { totalFollowers: 1 } }, { new: true })
+    ]);
 
     return userFollowerUpdated;
+}
+
+async function handleUnFollow(userId, data) {
+    const { unFollowerId } = data;
+    /* create follower  */
+    const [follower, following] = await Promise.all([
+        Followers.deleteOne({ userId: unFollowerId, followerId: userId }),
+        Followings.deleteOne({ userId, followingId: unFollowerId })
+    ]);
+    /* update total follower &  following for user */
+    const [userUnFollowerUpdated, userFollowingUpdated] = await Promise.all([
+        Users.findByIdAndUpdate(userId, { $inc: { totalFollowings: -1 } }, { new: true }),
+        Users.findByIdAndUpdate(unFollowerId, { $inc: { totalFollowers: -1 } }, { new: true })
+    ]);
+
+    return userUnFollowerUpdated;
 }
 
 module.exports = {
@@ -85,5 +89,6 @@ module.exports = {
     getListUsers,
     getUser,
     updateUser,
-    handleFollow
+    handleFollow,
+    handleUnFollow
 };

@@ -2,7 +2,7 @@ const axios = require('axios');
 const CreateError = require('http-errors');
 const faker = require('faker');
 const { userConstant } = require('../constants');
-const { Users, Followers } = require('../datasources/mongodb/models');
+const { Users, Followers, Followings } = require('../datasources/mongodb/models');
 const { signAccessToken, verifyToken } = require('../middlewares/authentication');
 const { ERROR_CODES } = require('../constants/users.constant');
 
@@ -96,13 +96,39 @@ async function validateFollowUser(id, body) {
         throw new CreateError.NotFound(ERROR_CODES.ERROR_USER_NOT_FOUND);
     }
 
-    const countUserFollwing = await Followers.findOne({
+    const countUserFollowing = await Followings.countDocuments({
         userId,
         followingId: followerId
     });
 
-    if (countUserFollwing) {
-        throw new CreateError.BadRequest(ERROR_CODES.ERROR_USER_NOT_FOUND);
+    if (countUserFollowing) {
+        throw new CreateError.BadRequest(ERROR_CODES.ERROR_YOU_ALREADY_FOLLOW_THIS);
+    }
+
+    return body;
+}
+
+async function validateUnFollowUser(id, body) {
+    const { userId, unFollowerId } = body;
+
+    if (userId === unFollowerId) {
+        throw new CreateError.BadRequest(ERROR_CODES.ERROR_YOU_NOT_UNFOLLOW_YOURSELF);
+    }
+
+    const user = await validateUser(id);
+    const userUnFollwer = await validateUser(unFollowerId);
+
+    if (!userUnFollwer) {
+        throw new CreateError.NotFound(ERROR_CODES.ERROR_USER_NOT_FOUND);
+    }
+
+    const countUserFollowing = await Followings.countDocuments({
+        userId,
+        followingId: unFollowerId
+    });
+
+    if (!countUserFollowing) {
+        throw new CreateError.BadRequest(ERROR_CODES.ERROR_YOU_NOT_FOLLOW_YET);
     }
 
     return body;
@@ -114,5 +140,6 @@ module.exports = {
     validateUserLogin,
     validateUser,
     validateUpdateUser,
-    validateFollowUser
+    validateFollowUser,
+    validateUnFollowUser
 };

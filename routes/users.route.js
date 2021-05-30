@@ -13,7 +13,8 @@ router.post('/auth/register', validateBody(usersSchema.create), usersControllers
 router.post('/auth/login', validateBody(usersSchema.login), usersControllers.login);
 router.get('/', verifySession, validateQuery(usersSchema.getList), usersControllers.getUsers);
 router.put('/:id', validateBody(usersSchema.update), usersControllers.updateUser);
-router.post('/:id/follow', validateBody(usersSchema.follow), usersControllers.followUser);
+router.put('/:id/follow', validateBody(usersSchema.follow), usersControllers.followUser);
+router.put('/:id/unfollow', validateBody(usersSchema.unFollow), usersControllers.unfollowUser);
 router.delete('/:id', usersControllers.deleteUser);
 
 module.exports = router;

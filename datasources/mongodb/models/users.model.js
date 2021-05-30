@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const crypto = require('crypto');
 const { STATUS, RELATIONSHIP } = require('../../../constants/users.constant');
 
 const { Schema } = mongoose;
@@ -11,7 +12,7 @@ const UserSchema = new Schema({
     hash: { type: String, required: true },
     email: { type: String, trim: true, unique: true, index: true, required: true },
     status: {
-        type: String,
+        type: Number,
         default: STATUS.ACTIVE,
         enum: Object.values(STATUS)
     },

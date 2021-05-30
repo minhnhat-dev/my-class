@@ -50,7 +50,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(morgan('common'));
+if (['localhost', 'development'].includes(process.env.NODE_ENV)) {
+    app.use(morgan('dev'));
+} else {
+    app.use(morgan('common'));
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -78,7 +83,7 @@ app.get('/', (req, res) => { res.render(path.resolve('./views/index.ejs')); });
 
 app.get('/ping', (req, res) => {
     console.log('Accept ping !');
-    res.status(200).send({ message: `Pong ${process.env.PORT} !!! ^^ ^^^^` });
+    res.status(200).send({ message: `Pong ${process.env.PORT} !` });
 });
 
 app.use(routes);
