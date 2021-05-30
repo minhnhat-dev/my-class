@@ -17,6 +17,7 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       # Build the images
+      
       - name: Build the docker-compose stack
         run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build node-server
       # List images
