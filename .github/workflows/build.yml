@@ -23,7 +23,7 @@ jobs:
       - name: List images
         run: docker images
       # List container
-      - name: List images
+      - name: List containers
         run: docker ps -a
       # Push images
       - name: Push images
