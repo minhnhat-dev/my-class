@@ -16,20 +16,9 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
- 
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
       # Build the images
       - name: Build the docker-compose stack
-        id: docker_build
-        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build node-server --cache-from "type=local,src=$GITHUB_WORKSPACE/cache"
-          --cache-to "type=local,dest=$GITHUB_WORKSPACE/cache"
-          --output "type=image, name=your_image:CI,push=false"
+        run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build node-server
       # List images
       - name: List images
         run: docker images
