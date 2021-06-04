@@ -3,8 +3,11 @@ const {
     validateCreatePost,
     validateUpdatePost,
     validatePost,
-    validateLikePost
+    validateLikePost,
+    validateUnLikePost
 } = require('../validators/posts.validator');
+
+const { validateUser } = require('../validators/users.validator');
 const { postsServices } = require('../services');
 
 async function createPost(req, res, next) {
@@ -51,11 +54,28 @@ async function likePost(req, res, next) {
     return res.status(200).send(post);
 }
 
+async function unlikePost(req, res, next) {
+    const { id } = req.params;
+    await validateUnLikePost(id, req.body);
+    const post = await postsServices.unlikePost(id, req.body);
+    return res.status(200).send(post);
+}
+
+async function getTimelineByUserId(req, res, next) {
+    const { userId } = req.query;
+    const user = await validateUser(userId);
+    req.body.user = user;
+    const posts = await postsServices.getTimelineByUserId(userId);
+    return res.status(200).send(posts);
+}
+
 module.exports = {
     createPost,
     updatePost,
     getPosts,
     getPost,
     deletePost,
-    likePost
+    likePost,
+    unlikePost,
+    getTimelineByUserId
 };

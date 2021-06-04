@@ -1,6 +1,9 @@
 /* eslint-disable radix */
-const { Posts, Likes } = require('../datasources/mongodb/models');
+const _ = require('lodash');
+const { Posts, Likes, Users, Followings } = require('../datasources/mongodb/models');
 const { convertSelectQuery, buildSortStringToObject } = require('../helpers/query.helper');
+const { STATUS: STATUS_FOLLOWINGS } = require('../constants/followings.constant');
+const { STATUS: STATUS_POSTS } = require('../constants/posts.constant');
 
 async function createPost(data) {
     const post = await Posts.create(data);
@@ -59,11 +62,30 @@ async function likePost(id, data) {
     return Posts.findByIdAndUpdate(id, { $inc: { totalLikes: 1 } }, { new: true });
 }
 
+async function unlikePost(id, data) {
+    const { userId } = data;
+    await Likes.deleteOne({ userId, postId: id });
+    return Posts.findByIdAndUpdate(id, { $inc: { totalLikes: -1 } }, { new: true });
+}
+
+async function getTimelineByUserId(userId) {
+    const followings = await Followings.find({ userId, status: STATUS_FOLLOWINGS.ACTIVE });
+    const usersFollowingsIds = _.uniq(followings.map((item) => item.followingId.toString()));
+    const usersIds = [userId, ...usersFollowingsIds];
+    const posts = await Posts.find({
+        userId: { $in: usersIds },
+        status: STATUS_POSTS.ACTIVE
+    });
+    return posts;
+}
+
 module.exports = {
     createPost,
     getListPosts,
     getPost,
     updatePost,
     deletePost,
-    likePost
+    likePost,
+    unlikePost,
+    getTimelineByUserId
 };

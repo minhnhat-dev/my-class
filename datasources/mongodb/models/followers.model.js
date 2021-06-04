@@ -10,7 +10,8 @@ const FollowersSchema = new Schema({
     followerId: ObjectId,
     status: {
         type: Number,
-        enum: Object.values(STATUS)
+        enum: Object.values(STATUS),
+        default: STATUS.ACTIVE
     }
 }, { versionKey: false, timestamps: true });
 

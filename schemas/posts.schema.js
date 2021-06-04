@@ -38,9 +38,27 @@ const likePost = {
     }
 };
 
+const unlikePost = {
+    type: 'object',
+    required: ['userId'],
+    properties: {
+        userId: shared.mongoObjectId
+    }
+};
+
+const getTimeline = {
+    type: 'object',
+    required: ['userId'],
+    properties: {
+        userId: shared.mongoObjectId
+    }
+};
+
 module.exports = {
     create,
     update,
     getList,
-    likePost
+    likePost,
+    unlikePost,
+    getTimeline
 };

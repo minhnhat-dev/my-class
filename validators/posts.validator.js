@@ -43,9 +43,23 @@ async function validateLikePost(id, body) {
     return body;
 }
 
+async function validateUnLikePost(id, body) {
+    const { userId } = body;
+    await validatePost(id);
+
+    const countLike = await Likes.countDocuments({ userId, postId: id });
+
+    if (!countLike) {
+        throw new CreateError.BadRequest(ERROR_CODES.ERROR_YOU_NOT_LIKE_POST_YET);
+    }
+
+    return body;
+}
+
 module.exports = {
     validateCreatePost,
     validateUpdatePost,
     validatePost,
-    validateLikePost
+    validateLikePost,
+    validateUnLikePost
 };
