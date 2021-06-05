@@ -37,5 +37,17 @@ services:
     restart: always
   redis:
     image: redis:6.2.3
+  mongo-express:
+    image: mongo-express:0.54
+    depends_on:
+      - mongodb
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=nhatnguyen
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=mypassword
+    ports:
+      - '8081:8081'
+    volumes: 
+      - mongodb:/data/db
 volumes:
   mongodb:
