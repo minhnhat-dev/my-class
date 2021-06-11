@@ -1,0 +1,63 @@
+version: "3"
+
+services:
+  mongo1:
+    hostname: mongo1
+    container_name: localmongo1
+    image: mongo:4.4
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=nhatnguyen
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+    volumes: 
+      - mongodb1:/data/db
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+  mongo2:
+    hostname: mongo2
+    container_name: localmongo2
+    image: mongo:4.4
+    expose:
+      - 27017
+    ports:
+      - 27018:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=nhatnguyen
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+    volumes: 
+      - mongodb2:/data/db
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+  mongo3:
+    hostname: mongo3
+    container_name: localmongo3
+    image: mongo:4.4
+    expose:
+      - 27017
+    ports:
+      - 27019:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=nhatnguyen
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+    volumes: 
+      - mongodb3:/data/db
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+
+  mongosetup:
+    image: mongo:4.4
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    volumes:
+      - .:/scripts
+    restart: "no"
+    entrypoint: [ "bash", "/scripts/mongo_setup.sh"]
+volumes:
+  mongodb1:
+  mongodb2:
+  mongodb3:

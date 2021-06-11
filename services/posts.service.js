@@ -1,9 +1,9 @@
 /* eslint-disable radix */
-const _ = require('lodash');
-const { Posts, Likes, Users, Followings } = require('../datasources/mongodb/models');
-const { convertSelectQuery, buildSortStringToObject } = require('../helpers/query.helper');
-const { STATUS: STATUS_FOLLOWINGS } = require('../constants/followings.constant');
-const { STATUS: STATUS_POSTS } = require('../constants/posts.constant');
+const _ = require("lodash");
+const { Posts, Likes, Users, Followings } = require("../datasources/mongodb/models");
+const { convertSelectQuery, buildSortStringToObject } = require("../helpers/query.helper");
+const { STATUS: STATUS_FOLLOWINGS } = require("../constants/followings.constant");
+const { STATUS: STATUS_POSTS } = require("../constants/posts.constant");
 
 async function createPost(data) {
     const post = await Posts.create(data);
@@ -26,7 +26,7 @@ async function getListPosts(query) {
 
     if (searchText) {
         conditions.$or = [
-            { description: { $regex: searchText.trim(), $options: 'i' } }
+            { description: { $regex: searchText.trim(), $options: "i" } }
         ];
     }
 
@@ -71,12 +71,21 @@ async function unlikePost(id, data) {
 async function getTimelineByUserId(userId) {
     const followings = await Followings.find({ userId, status: STATUS_FOLLOWINGS.ACTIVE });
     const usersFollowingsIds = _.uniq(followings.map((item) => item.followingId.toString()));
-    const usersIds = [userId, ...usersFollowingsIds];
-    const posts = await Posts.find({
-        userId: { $in: usersIds },
-        status: STATUS_POSTS.ACTIVE
+    const usersIds = _.uniq([userId, ...usersFollowingsIds]);
+
+    const [users = [], posts = []] = await Promise.all([
+        Users.find({ _id: { $in: usersIds } }).lean(),
+        Posts.find({ userId: { $in: usersIds }, status: STATUS_POSTS.ACTIVE }).lean()
+    ]);
+
+    const usersKeyById = _.keyBy(users, "_id");
+
+    const newPosts = posts.map((post) => {
+        const { userId: userIdPost } = post;
+        post.user = usersKeyById[userIdPost.toString()] || null;
+        return post;
     });
-    return posts;
+    return newPosts;
 }
 
 module.exports = {

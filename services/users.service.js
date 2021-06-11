@@ -1,6 +1,6 @@
 /* eslint-disable radix */
-const { Users, Followers, Followings } = require('../datasources/mongodb/models');
-const { convertSelectQuery, buildSortStringToObject } = require('../helpers/query.helper');
+const { Users, Followers, Followings } = require("../datasources/mongodb/models");
+const { convertSelectQuery, buildSortStringToObject } = require("../helpers/query.helper");
 
 async function createUser(data) {
     const user = new Users(data);
@@ -25,8 +25,8 @@ async function getListUsers(query) {
 
     if (searchText) {
         conditions.$or = [
-            { name: { $regex: searchText.trim(), $options: 'i' } },
-            { email: { $regex: searchText.trim(), $options: 'i' } }
+            { name: { $regex: searchText.trim(), $options: "i" } },
+            { email: { $regex: searchText.trim(), $options: "i" } }
         ];
     }
 
@@ -66,6 +66,41 @@ async function handleFollow(userId, data) {
     ]);
 
     return userFollowerUpdated;
+}
+
+async function handleFollowTransation(userId, data) {
+    const { followerId } = data;
+    const session = await Users.startSession();
+    session.startTransaction();
+    try {
+    /* create follower  */
+        const follower = await Followers.create([{ userId: followerId, followerId: userId }], { session });
+        console.log("follower", follower);
+        const following = await Followings.create([{ userId, followingId: followerId }], { session });
+        console.log("following", following);
+
+        /* update total follower &  following for user */
+        const userFollowerUpdated = await Users.findByIdAndUpdate(
+            userId,
+            { $inc: { totalFollowings: 1 } },
+            { session, new: true }
+        ).lean();
+
+        const userFollowingUpdated = await Users.findByIdAndUpdate(
+            followerId,
+            { $inc: { totalFollowers: 1 } },
+            { session, new: true }
+        ).lean();
+
+        await session.commitTransaction();
+        session.endSession();
+        return userFollowerUpdated;
+    } catch (error) {
+        console.error("error", error);
+        await session.abortTransaction();
+        session.endSession();
+        throw error;
+    }
 }
 
 async function handleUnFollow(userId, data) {
