@@ -45,7 +45,18 @@ async function getListPosts(query) {
             .lean(),
         Posts.countDocuments(conditions)
     ]);
-    return { posts, total };
+
+    const userIds = posts.map((post) => post.userId.toString());
+    const users = await Users.find({ _id: { $in: userIds } }).lean();
+    const usersKeyById = _.keyBy(users, "_id");
+
+    const newPosts = posts.map((post) => {
+        const { userId: userIdPost } = post;
+        post.user = usersKeyById[userIdPost.toString()] || null;
+        return post;
+    });
+
+    return { posts: newPosts, total };
 }
 
 async function getPost(id) {
