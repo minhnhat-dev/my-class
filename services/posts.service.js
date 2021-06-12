@@ -16,8 +16,9 @@ async function getListPosts(query) {
         limit = 100,
         sort,
         select,
-        search_text: searchText,
-        is_all: isAll = 0
+        searchText,
+        isAll = false,
+        userId
     } = query;
 
     const conditions = {};
@@ -30,11 +31,15 @@ async function getListPosts(query) {
         ];
     }
 
+    if (userId) {
+        conditions.userId = userId;
+    }
+
     const [posts = [], total = 0] = await Promise.all([
         Posts.find(conditions)
             .sort(sortObject)
-            .skip(parseInt(isAll) ? 0 : Number(skip))
-            .limit(parseInt(isAll) ? 0 : Number(limit))
+            .skip(isAll ? 0 : Number(skip))
+            .limit(isAll ? 0 : Number(limit))
             .select(selects)
             .lean(),
         Posts.countDocuments(conditions)

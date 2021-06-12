@@ -23,10 +23,11 @@ const getList = {
     properties: {
         skip: shared.getListSkip,
         limit: shared.getListLimit,
-        is_all: { type: "string" },
+        isAll: { type: "boolean", default: false },
         select: { type: "string" },
         sort: { type: "string" },
-        search_text: { type: "string" }
+        searchText: { type: "string" },
+        userId: shared.mongoObjectId
     }
 };
 
