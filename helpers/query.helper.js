@@ -1,7 +1,7 @@
-const _ = require('lodash');
-const CreateError = require('http-errors');
-const escapeStringRegexp = require('escape-string-regexp');
-const { getTimeStartAndEndOfDay } = require('./datetime.helper');
+const _ = require("lodash");
+const CreateError = require("http-errors");
+const escapeStringRegexp = require("escape-string-regexp");
+const { getTimeStartAndEndOfDay } = require("./datetime.helper");
 
 /**
  * goal function: built text search by arr fields name
@@ -9,17 +9,17 @@ const { getTimeStartAndEndOfDay } = require('./datetime.helper');
  * @q {string} string query
  * @return {array}
  */
-function buildTextSearch(fields = [], q = '') {
+function buildTextSearch(fields = [], q = "") {
     const $or = [];
 
-    if (!fields.length || q === '') {
+    if (!fields.length || q === "") {
         return $or;
     }
 
     fields.forEach((field) => {
         $or.push(
             {
-                [field]: new RegExp(escapeStringRegexp(q), 'i')
+                [field]: new RegExp(escapeStringRegexp(q), "i")
             }
         );
     });
@@ -40,11 +40,11 @@ function timeout(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function convertSelectQuery(select = '') {
-    return select.split(',').join(' ');
+function convertSelectQuery(select = "") {
+    return select.split(",").join(" ");
 }
 
-function buildConditionDate({ start = '', end = '', field = '' }) {
+function buildConditionDate({ start = "", end = "", field = "" }) {
     const conditionDate = [];
     if (!start || !end || !field) return [];
 
@@ -74,13 +74,13 @@ function mergeConditionDate(conditions = {}, conditionDate = []) {
     return newConditions;
 }
 
-function splitStringIdsToArray(ids = '') {
-    return ids.split(',').map((id) => id.trim());
+function splitStringIdsToArray(ids = "") {
+    return ids.split(",").map((id) => id.trim());
 }
 
-function validateArrayQueryLength(list = [], messageError = '', validLength = 100) {
+function validateArrayQueryLength(list = [], messageError = "", validLength = 100) {
     if (list.length > validLength) {
-        throw new CreateError.BadRequest(messageError || 'error_params_query_invalid');
+        throw new CreateError.BadRequest(messageError || "error_params_query_invalid");
     }
     return true;
 }
@@ -89,12 +89,12 @@ function validateArrayQueryLength(list = [], messageError = '', validLength = 10
  * @sortString {string} string sort: "-created_at,name,-age"
  * @return {object} object sort: {created_at: -1, name: 1, age: -1}
  */
-function buildSortStringToObject(sortString = '') {
+function buildSortStringToObject(sortString = "") {
     const sort = {};
     if (!sortString) return sort;
-    sortString.split(',').forEach((field) => {
+    sortString.split(",").forEach((field) => {
         const typeSort = field.charAt(0);
-        if (typeSort !== '-') {
+        if (typeSort !== "-") {
             sort[field] = 1;
         } else {
             const fieldSort = field.substring(1);

@@ -5,10 +5,11 @@ const {
     validatePost,
     validateLikePost,
     validateUnLikePost
-} = require('../validators/posts.validator');
+} = require("../validators/posts.validator");
 
-const { validateUser } = require('../validators/users.validator');
-const { postsServices } = require('../services');
+const { validateUser } = require("../validators/users.validator");
+const { postsServices } = require("../services");
+const { SKIP_DEFAULT, LIMIT_DEFAULT } = require("../constants/global.constant");
 
 async function createPost(req, res, next) {
     const { body } = req;
@@ -29,6 +30,8 @@ async function getPosts(req, res, next) {
     const { posts, total } = await postsServices.getListPosts(req.query);
     if (parseInt(req.query.is_all)) return res.status(200).send({ items: posts, total });
     return res.status(200).send({
+        skip: req.query.skip || SKIP_DEFAULT,
+        limit: req.query.limit || LIMIT_DEFAULT,
         items: posts,
         total
     });
@@ -65,8 +68,13 @@ async function getTimelineByUserId(req, res, next) {
     const { userId } = req.query;
     const user = await validateUser(userId);
     req.body.user = user;
-    const posts = await postsServices.getTimelineByUserId(userId);
-    return res.status(200).send(posts);
+    const { posts, total } = await postsServices.getTimelineByUserId(userId);
+    return res.status(200).send({
+        skip: req.query.skip || SKIP_DEFAULT,
+        limit: req.query.limit || LIMIT_DEFAULT,
+        items: posts,
+        total
+    });
 }
 
 module.exports = {

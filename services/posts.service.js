@@ -4,6 +4,7 @@ const { Posts, Likes, Users, Followings } = require("../datasources/mongodb/mode
 const { convertSelectQuery, buildSortStringToObject } = require("../helpers/query.helper");
 const { STATUS: STATUS_FOLLOWINGS } = require("../constants/followings.constant");
 const { STATUS: STATUS_POSTS } = require("../constants/posts.constant");
+const { SKIP_DEFAULT, LIMIT_DEFAULT } = require("../constants/global.constant");
 
 async function createPost(data) {
     const post = await Posts.create(data);
@@ -12,8 +13,8 @@ async function createPost(data) {
 
 async function getListPosts(query) {
     const {
-        skip = 0,
-        limit = 100,
+        skip = SKIP_DEFAULT,
+        limit = LIMIT_DEFAULT,
         sort,
         select,
         searchText,
@@ -77,10 +78,12 @@ async function getTimelineByUserId(userId) {
     const followings = await Followings.find({ userId, status: STATUS_FOLLOWINGS.ACTIVE });
     const usersFollowingsIds = _.uniq(followings.map((item) => item.followingId.toString()));
     const usersIds = _.uniq([userId, ...usersFollowingsIds]);
+    const condition = { userId: { $in: usersIds }, status: STATUS_POSTS.ACTIVE };
 
-    const [users = [], posts = []] = await Promise.all([
+    const [users = [], posts = [], total = 0] = await Promise.all([
         Users.find({ _id: { $in: usersIds } }).lean(),
-        Posts.find({ userId: { $in: usersIds }, status: STATUS_POSTS.ACTIVE }).lean()
+        Posts.find(condition).lean(),
+        Posts.countDocuments(condition)
     ]);
 
     const usersKeyById = _.keyBy(users, "_id");
@@ -90,7 +93,7 @@ async function getTimelineByUserId(userId) {
         post.user = usersKeyById[userIdPost.toString()] || null;
         return post;
     });
-    return newPosts;
+    return { posts: newPosts, total };
 }
 
 module.exports = {

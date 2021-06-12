@@ -1,6 +1,7 @@
 /* eslint-disable radix */
 const { Users, Followers, Followings } = require("../datasources/mongodb/models");
 const { convertSelectQuery, buildSortStringToObject } = require("../helpers/query.helper");
+const { SKIP_DEFAULT, LIMIT_DEFAULT } = require("../constants/global.constant");
 
 async function createUser(data) {
     const user = new Users(data);
@@ -11,8 +12,8 @@ async function createUser(data) {
 
 async function getListUsers(query) {
     const {
-        skip = 0,
-        limit = 100,
+        skip = SKIP_DEFAULT,
+        limit = LIMIT_DEFAULT,
         sort,
         select,
         search_text: searchText,
