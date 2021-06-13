@@ -1,7 +1,7 @@
 /* eslint-disable radix */
-const { functions } = require('lodash');
-const { validateBody } = require('../validators');
-const { Users } = require('../datasources/mongodb/models');
+const { functions } = require("lodash");
+const { validateBody } = require("../validators");
+const { Users } = require("../datasources/mongodb/models");
 const {
     validateCreateUser,
     validateUserLogin,
@@ -9,8 +9,8 @@ const {
     validateUpdateUser,
     validateFollowUser,
     validateUnFollowUser
-} = require('../validators/users.validator');
-const { usersServices } = require('../services');
+} = require("../validators/users.validator");
+const { usersServices } = require("../services");
 
 async function createUser(req, res, next) {
     const { body } = req;

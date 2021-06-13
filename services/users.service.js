@@ -46,6 +46,7 @@ async function getListUsers(query) {
 
 async function getUser(id) {
     const user = await Users.findById(id).lean();
+    return user;
 }
 
 async function updateUser(id, data) {
