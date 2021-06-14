@@ -44,8 +44,7 @@ async function login(req, res, next) {
     const { user, token } = await validateUserLogin(req.body);
     /* add infomation user to redis */
     req.session.user = user;
-    user.token = token;
-    return res.status(200).send(user);
+    return res.status(200).send({ user, token });
 }
 
 async function getUser(req, res, next) {

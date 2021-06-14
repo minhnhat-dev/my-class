@@ -52,7 +52,7 @@ async function validateCreateUser(body) {
 
 async function validateUserLogin(body) {
     const { email, password } = body;
-    const user = await Users.findOne({ email }).lean();
+    const user = await Users.findOne({ email });
 
     if (!user) {
         throw new CreateError.NotFound(ERROR_CODES.ERROR_USER_NOT_FOUND);
