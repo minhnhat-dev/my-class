@@ -77,6 +77,14 @@ async function getTimelineByUserId(req, res, next) {
     });
 }
 
+async function checkIsLike(req, res, next) {
+    const { id } = req.params;
+    const { userId } = req.query;
+    await validatePost(id);
+    const isLike = await postsServices.checkIsLikePost(id, userId);
+    return res.status(200).send({ isLike });
+}
+
 module.exports = {
     createPost,
     updatePost,
@@ -85,5 +93,6 @@ module.exports = {
     deletePost,
     likePost,
     unlikePost,
-    getTimelineByUserId
+    getTimelineByUserId,
+    checkIsLike
 };

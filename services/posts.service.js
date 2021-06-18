@@ -107,6 +107,11 @@ async function getTimelineByUserId(userId) {
     return { posts: newPosts, total };
 }
 
+async function checkIsLikePost(id, userId) {
+    const count = await Likes.countDocuments({ userId, postId: id });
+    return !!count;
+}
+
 module.exports = {
     createPost,
     getListPosts,
@@ -115,5 +120,6 @@ module.exports = {
     deletePost,
     likePost,
     unlikePost,
-    getTimelineByUserId
+    getTimelineByUserId,
+    checkIsLikePost
 };
