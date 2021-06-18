@@ -1,7 +1,5 @@
 /* eslint-disable radix */
-const { functions } = require("lodash");
-const { validateBody } = require("../validators");
-const { Users } = require("../datasources/mongodb/models");
+const { signAccessToken } = require("../middlewares/authentication");
 const {
     validateCreateUser,
     validateUserLogin,
@@ -16,9 +14,10 @@ async function createUser(req, res, next) {
     const { body } = req;
     const data = await validateCreateUser(body);
     const user = await usersServices.createUser(data);
+    const token = signAccessToken(user);
     /* add infomation user to redis */
     req.session.user = user;
-    return res.status(201).send(user);
+    return res.status(201).send({ user, token });
 }
 
 async function updateUser(req, res, next) {
