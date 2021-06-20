@@ -10,7 +10,7 @@ function signAccessToken(user) {
     return jwt.sign({
         iss: "minhnhat.dev",
         id: user._id
-    }, JWT_SECRET, { expiresIn: "2m" });
+    }, JWT_SECRET);
 }
 
 function verifyToken(req, res, next) {
