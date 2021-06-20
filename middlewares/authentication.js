@@ -27,9 +27,9 @@ function verifyToken(req, res, next) {
         next();
     } catch (err) {
         console.error("VerifyToken Err", err);
-        const error = new createError.Unauthorized("Access token expired");
+        const error = new createError.Unauthorized("error_jwt_expired");
         error.code = "ACCESS_TOKEN_EXPIRED";
-        next(err);
+        next(error);
     }
 }
 
