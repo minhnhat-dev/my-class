@@ -88,9 +88,6 @@ async function checkIsLike(req, res, next) {
 }
 
 function uploadImage(req, res) {
-    const { filename } = req.file;
-    const newPath = `/storage/images/${filename}`;
-    req.file.path = newPath;
     return res.status(201).send({ file: req.file });
 }
 
