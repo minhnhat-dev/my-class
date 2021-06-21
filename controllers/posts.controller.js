@@ -70,7 +70,7 @@ async function getTimelineByUserId(req, res, next) {
     const { userId } = req.query;
     const user = await validateUser(userId);
     req.body.user = user;
-    const { posts, total } = await postsServices.getTimelineByUserId(userId);
+    const { posts, total } = await postsServices.getTimelineByUserId(req.query);
     return res.status(200).send({
         skip: req.query.skip || SKIP_DEFAULT,
         limit: req.query.limit || LIMIT_DEFAULT,

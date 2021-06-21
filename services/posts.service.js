@@ -85,26 +85,29 @@ async function unlikePost(id, data) {
     return Posts.findByIdAndUpdate(id, { $inc: { totalLikes: -1 } }, { new: true });
 }
 
-async function getTimelineByUserId(userId) {
+async function getTimelineByUserId(query) {
+    const {
+        sort,
+        userId,
+        limit = LIMIT_DEFAULT,
+        skip = SKIP_DEFAULT
+    } = query;
+
+    const sortObject = buildSortStringToObject(sort);
     const followings = await Followings.find({ userId, status: STATUS_FOLLOWINGS.ACTIVE });
     const usersFollowingsIds = _.uniq(followings.map((item) => item.followingId.toString()));
     const usersIds = _.uniq([userId, ...usersFollowingsIds]);
     const condition = { userId: { $in: usersIds }, status: STATUS_POSTS.ACTIVE };
 
-    const [users = [], posts = [], total = 0] = await Promise.all([
-        Users.find({ _id: { $in: usersIds } }).lean(),
-        Posts.find(condition).lean(),
+    const [posts = [], total = 0] = await Promise.all([
+        Posts.find(condition).sort(sortObject)
+            .skip(skip)
+            .limit(limit)
+            .lean(),
         Posts.countDocuments(condition)
     ]);
 
-    const usersKeyById = _.keyBy(users, "_id");
-
-    const newPosts = posts.map((post) => {
-        const { userId: userIdPost } = post;
-        post.user = usersKeyById[userIdPost.toString()] || null;
-        return post;
-    });
-    return { posts: newPosts, total };
+    return { posts, total };
 }
 
 async function checkIsLikePost(id, userId) {
