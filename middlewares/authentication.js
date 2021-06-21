@@ -17,7 +17,10 @@ function verifyToken(req, res, next) {
     try {
         const authorization = req.headers.authorization || "";
         const token = authorization.split(" ")[1];
-        console.log("token", token);
+
+        if (!token) {
+            throw new createError.Unauthorized("error_unauthorized");
+        }
         /* Verify access token */
         const decoded = jwt.verify(token, JWT_SECRET);
         console.log("decoded", decoded);
@@ -27,8 +30,8 @@ function verifyToken(req, res, next) {
         next();
     } catch (err) {
         console.error("VerifyToken Err", err);
-        const error = new createError.Unauthorized("error_jwt_expired");
-        error.code = "ACCESS_TOKEN_EXPIRED";
+        const error = new createError.Unauthorized("error_unauthorized");
+        error.code = "error_unauthorized";
         next(error);
     }
 }

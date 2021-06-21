@@ -1,78 +1,78 @@
-const other = require('./other');
+const other = require("./other");
 
 const logger = {
-    fileName: 'logs/error-%DATE%.log',
-    datePattern: 'YYYY-MM-DD-HH',
+    fileName: "logs/error-%DATE%.log",
+    datePattern: "YYYY-MM-DD-HH",
     zippedArchive: true,
-    maxSize: '5m',
-    maxFiles: '30d'
+    maxSize: "5m",
+    maxFiles: "30d"
 };
 
-const JWT_SECRET = 'SECRET_KEY_WEB_REVIEW';
+const JWT_SECRET = "SECRET_KEY_WEB_REVIEW";
 
 const expire = (params) => Date.now() + 1000 * 60 * 60 * 24 * params;
 
 const accessTokenData = {
-    iss: '321xem.com',
-    sub: 'accessToken',
-    aud: 'user',
+    iss: "321xem.com",
+    sub: "accessToken",
+    aud: "user",
     iat: Date.now(),
     exp: expire(2)
 };
 
 const refreshTokenData = {
-    iss: '321xem.com',
-    sub: 'refreshToken',
-    aud: 'user',
+    iss: "321xem.com",
+    sub: "refreshToken",
+    aud: "user",
     iat: Date.now(),
     exp: expire(3)
 };
 
-const ngrok = 'https://5458439a7fdc.ngrok.io';
+const ngrok = "https://5458439a7fdc.ngrok.io";
 
 const roles = [
-    'admin',
-    'customer',
-    'partner',
-    'student',
-    'teacher'
+    "admin",
+    "customer",
+    "partner",
+    "student",
+    "teacher"
 ];
 
 const REALM = {
-    student: 'student',
-    teacher: 'teacher'
+    student: "student",
+    teacher: "teacher"
 };
 
 const uploadFiles = {
-    'create-products': {
+    "create-products": {
         fields: [
             {
-                name: 'images',
+                name: "images",
                 maxCount: 5
             }
         ],
-        acl: 'public-read',
-        fieldKey: 'products',
-        bucket: 'products',
+        acl: "public-read",
+        fieldKey: "products",
+        bucket: "products",
         allowedContentTypes: [
-            'image/png',
-            'image/jpeg'
+            "image/png",
+            "image/jpeg"
         ],
         maxFileSize: 8388608
     },
-    'create-posts': {
+    "upload-images": {
         fields: [
             {
-                name: 'image',
-                maxCount: 5
+                name: "image",
+                maxCount: 1
             }
         ],
-        acl: 'public-read',
-        fieldKey: 'posts',
-        bucket: 'posts',
+        acl: "public-read",
+        fieldKey: "posts",
+        bucket: "posts",
         allowedContentTypes: [
-            'image/png',
-            'image/jpeg'
+            "image/png",
+            "image/jpeg"
         ],
         maxFileSize: 8388608
     }

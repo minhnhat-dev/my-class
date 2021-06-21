@@ -1,25 +1,25 @@
-const path = require('path');
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const cors = require('cors');
-const compression = require('compression');
-const responseTime = require('response-time');
-const session = require('express-session');
-const passport = require('passport');
-const socketio = require('socket.io');
-const redis = require('redis');
-const RedisStore = require('connect-redis')(session);
-const http = require('http');
-const { REDIS_PORT, REDIS_URL, SESSION_SECRET } = require('./datasources/redis/configs');
-const { loginFacebook } = require('./middlewares/login.facebook');
-const { loginGoogle } = require('./middlewares/login.google');
-const routes = require('./routes');
-const { errorMiddleware } = require('./middlewares/error-handlers');
-const { verifyToken } = require('./middlewares/authentication');
-require('express-async-errors');
-require('./datasources');
+const path = require("path");
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const cors = require("cors");
+const compression = require("compression");
+const responseTime = require("response-time");
+const session = require("express-session");
+const passport = require("passport");
+const socketio = require("socket.io");
+const redis = require("redis");
+const RedisStore = require("connect-redis")(session);
+const http = require("http");
+const { REDIS_PORT, REDIS_URL, SESSION_SECRET } = require("./datasources/redis/configs");
+const { loginFacebook } = require("./middlewares/login.facebook");
+const { loginGoogle } = require("./middlewares/login.google");
+const routes = require("./routes");
+const { errorMiddleware } = require("./middlewares/error-handlers");
+const { verifyToken } = require("./middlewares/authentication");
+require("express-async-errors");
+require("./datasources");
 
 const redisClient = redis.createClient({
     host: REDIS_URL,
@@ -43,24 +43,24 @@ passport.deserializeUser((obj, cb) => {
 // app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
 // app.use(passport.initialize());
 // app.use(passport.session());
-app.use(require('./middlewares/redact'));
-app.use(require('./middlewares/normalize-mongoose'));
+app.use(require("./middlewares/redact"));
+app.use(require("./middlewares/normalize-mongoose"));
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.use(express.static(path.join(__dirname, 'public')));
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+app.use(express.static(path.join(__dirname, "public")));
 
-if (['localhost', 'development'].includes(process.env.NODE_ENV)) {
-    app.use(morgan('dev'));
+if (["localhost", "development"].includes(process.env.NODE_ENV)) {
+    app.use(morgan("dev"));
 } else {
-    app.use(morgan('common'));
+    app.use(morgan("common"));
 }
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded());
 app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(compression());
 app.use(responseTime());
@@ -79,10 +79,10 @@ app.use(session({
     }
 }));
 
-app.get('/', (req, res) => { res.render(path.resolve('./views/index.ejs')); });
+app.get("/", (req, res) => { res.render(path.resolve("./views/index.ejs")); });
 
-app.get('/ping', (req, res) => {
-    console.log('Accept ping !');
+app.get("/ping", (req, res) => {
+    console.log("Accept ping !");
     res.status(200).send({ message: `Pong ${process.env.PORT} !!!` });
 });
 

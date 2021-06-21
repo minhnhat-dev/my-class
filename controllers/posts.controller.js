@@ -6,12 +6,14 @@ const {
     validateLikePost,
     validateUnLikePost
 } = require("../validators/posts.validator");
-
+const uploadBus = require("../middlewares/upload-files");
 const { validateUser } = require("../validators/users.validator");
 const { postsServices } = require("../services");
 const { SKIP_DEFAULT, LIMIT_DEFAULT } = require("../constants/global.constant");
 
 async function createPost(req, res, next) {
+    const files = await uploadBus.upload("create-posts", req, res);
+    console.log("files", files);
     const { body } = req;
     const data = await validateCreatePost(body);
     const post = await postsServices.createPost(data);
@@ -85,6 +87,10 @@ async function checkIsLike(req, res, next) {
     return res.status(200).send({ isLike });
 }
 
+function uploadImage(req, res) {
+    return res.status(201).send({ file: req.file });
+}
+
 module.exports = {
     createPost,
     updatePost,
@@ -94,5 +100,6 @@ module.exports = {
     likePost,
     unlikePost,
     getTimelineByUserId,
-    checkIsLike
+    checkIsLike,
+    uploadImage
 };
