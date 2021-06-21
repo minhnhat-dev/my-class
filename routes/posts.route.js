@@ -11,6 +11,7 @@ require("express-async-errors");
 router.use(verifyToken);
 router.get("/", validateQuery(postsSchema.getList), postsControllers.getPosts);
 router.post("/", validateBody(postsSchema.create), postsControllers.createPost);
+router.get("/upload/", postsControllers.getImagesUpload);
 router.post("/upload", upload.single("image"), postsControllers.uploadImage);
 router.get("/timeline/", validateQuery(postsSchema.getTimeline), postsControllers.getTimelineByUserId);
 router.get("/:id", validateBody(postsSchema.update), postsControllers.getPost);

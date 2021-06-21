@@ -101,6 +101,15 @@ async function deleteImage(req, res) {
     return res.status(204).send();
 }
 
+async function getImagesUpload(req, res) {
+    const pathFile = path.resolve("public/storage/images");
+    const files = [];
+    fs.readdirSync(pathFile).forEach((file) => {
+        files.push(file);
+    });
+    return res.status(200).send({ items: files });
+}
+
 module.exports = {
     createPost,
     updatePost,
@@ -112,5 +121,6 @@ module.exports = {
     getTimelineByUserId,
     checkIsLike,
     uploadImage,
-    deleteImage
+    deleteImage,
+    getImagesUpload
 };
