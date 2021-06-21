@@ -9,14 +9,11 @@ const {
     validateLikePost,
     validateUnLikePost
 } = require("../validators/posts.validator");
-const uploadBus = require("../middlewares/upload-files");
 const { validateUser } = require("../validators/users.validator");
 const { postsServices } = require("../services");
 const { SKIP_DEFAULT, LIMIT_DEFAULT } = require("../constants/global.constant");
 
 async function createPost(req, res, next) {
-    const files = await uploadBus.upload("create-posts", req, res);
-    console.log("files", files);
     const { body } = req;
     const data = await validateCreatePost(body);
     const post = await postsServices.createPost(data);

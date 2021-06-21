@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { STATUS } = require('../../../constants/posts.constant');
+const mongoose = require("mongoose");
+const { STATUS } = require("../../../constants/posts.constant");
 
 const { Schema } = mongoose;
 const { ObjectId } = Schema.Types;
@@ -7,7 +7,7 @@ const { ObjectId } = Schema.Types;
 const PostsSchema = new Schema({
     userId: ObjectId,
     description: String,
-    images: [Schema.Types.Mixed],
+    image: {},
     status: {
         type: Number,
         default: STATUS.ACTIVE,
@@ -17,4 +17,4 @@ const PostsSchema = new Schema({
     totalComments: { type: Number, default: 0 }
 }, { versionKey: false, timestamps: true });
 
-module.exports = mongoose.model('Posts', PostsSchema);
+module.exports = mongoose.model("Posts", PostsSchema);

@@ -5,7 +5,8 @@ const create = {
     required: ["userId"],
     properties: {
         userId: shared.mongoObjectId,
-        description: { type: "string" }
+        description: { type: "string" },
+        image: { type: "object" }
     }
 };
 
