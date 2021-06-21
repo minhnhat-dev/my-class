@@ -18,6 +18,7 @@ router.put("/:id", validateBody(postsSchema.update), postsControllers.updatePost
 router.get("/:id/is-like", postsControllers.checkIsLike);
 router.put("/:id/like", validateBody(postsSchema.likePost), postsControllers.likePost);
 router.put("/:id/unlike", validateBody(postsSchema.unlikePost), postsControllers.unlikePost);
+router.delete("/upload/", postsControllers.deleteImage);
 router.delete("/:id", postsControllers.deletePost);
 
 module.exports = router;

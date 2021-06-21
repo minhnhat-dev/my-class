@@ -1,4 +1,7 @@
 /* eslint-disable radix */
+const fs = require("fs");
+const path = require("path");
+
 const {
     validateCreatePost,
     validateUpdatePost,
@@ -91,6 +94,13 @@ function uploadImage(req, res) {
     return res.status(201).send({ file: req.file });
 }
 
+async function deleteImage(req, res) {
+    const { file } = req.body;
+    const { path: pathFile } = file;
+    await fs.unlinkSync(path.resolve(pathFile));
+    return res.status(204).send();
+}
+
 module.exports = {
     createPost,
     updatePost,
@@ -101,5 +111,6 @@ module.exports = {
     unlikePost,
     getTimelineByUserId,
     checkIsLike,
-    uploadImage
+    uploadImage,
+    deleteImage
 };
