@@ -61,12 +61,12 @@ app.use(express.urlencoded());
 app.use(cookieParser());
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors({ origin: "*" }));
+app.use(cors());
 app.use(compression());
 app.use(responseTime());
 
 /* use redis session */
-// app.enable('trust proxy');
+app.enable("trust proxy");
 app.use(session({
     store: new RedisStore({ client: redisClient }),
     secret: SESSION_SECRET,
