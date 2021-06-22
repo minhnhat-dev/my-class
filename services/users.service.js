@@ -1,4 +1,5 @@
 /* eslint-disable radix */
+const _ = require("lodash");
 const { Users, Followers, Followings } = require("../datasources/mongodb/models");
 const { convertSelectQuery, buildSortStringToObject } = require("../helpers/query.helper");
 const { SKIP_DEFAULT, LIMIT_DEFAULT } = require("../constants/global.constant");
@@ -121,11 +122,102 @@ async function handleUnFollow(data) {
     return userUnFollowerUpdated;
 }
 
+async function getFollowers(query) {
+    const {
+        skip = SKIP_DEFAULT,
+        limit = LIMIT_DEFAULT,
+        sort,
+        select,
+        userId
+    } = query;
+
+    const conditions = {};
+    const selects = convertSelectQuery(select);
+    const sortObject = buildSortStringToObject(sort);
+
+    if (userId) {
+        conditions.userId = userId;
+    }
+
+    const [followers = [], total = 0] = await Promise.all([
+        Followers
+            .find(conditions)
+            .sort(sortObject)
+            .skip(Number(skip))
+            .limit(Number(limit))
+            .select(selects)
+            .lean(),
+        Followers.countDocuments(conditions)
+    ]);
+
+    const followerIds = followers.map((item) => item.followerId);
+    const users = await getUserByIds(followerIds);
+    const usersKeyById = _.keyBy(users, "_id");
+
+    /* attach user into response */
+    const newFollowers = followers.map((item) => {
+        const { followerId } = item;
+        const user = usersKeyById[followerId.toString()] || null;
+        item.user = user;
+        return item;
+    });
+
+    return { followers: newFollowers, total };
+}
+
+async function getFollowings(query) {
+    const {
+        skip = SKIP_DEFAULT,
+        limit = LIMIT_DEFAULT,
+        sort,
+        select,
+        userId
+    } = query;
+
+    const conditions = {};
+    const selects = convertSelectQuery(select);
+    const sortObject = buildSortStringToObject(sort);
+
+    if (userId) {
+        conditions.userId = userId;
+    }
+
+    const [followings = [], total = 0] = await Promise.all([
+        Followings
+            .find(conditions)
+            .sort(sortObject)
+            .skip(Number(skip))
+            .limit(Number(limit))
+            .select(selects)
+            .lean(),
+        Followings.countDocuments(conditions)
+    ]);
+    const followingIds = followings.map((item) => item.followingId);
+    const users = await getUserByIds(followingIds);
+    const usersKeyById = _.keyBy(users, "_id");
+
+    /* attach user into response */
+    const newFollowings = followings.map((item) => {
+        const { followingId } = item;
+        const user = usersKeyById[followingId.toString()] || null;
+        item.user = user;
+        return item;
+    });
+
+    return { followings: newFollowings, total };
+}
+
+async function getUserByIds(ids) {
+    return Users.find({ _id: { $in: ids } }).lean();
+}
+
 module.exports = {
     createUser,
     getListUsers,
     getUser,
     updateUser,
     handleFollow,
-    handleUnFollow
+    handleUnFollow,
+    getFollowers,
+    getFollowings
 };

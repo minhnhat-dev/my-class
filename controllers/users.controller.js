@@ -9,6 +9,7 @@ const {
     validateUnFollowUser
 } = require("../validators/users.validator");
 const { usersServices } = require("../services");
+const { SKIP_DEFAULT, LIMIT_DEFAULT } = require("../constants/global.constant");
 
 async function createUser(req, res, next) {
     const { body } = req;
@@ -70,6 +71,26 @@ async function unfollowUser(req, res, next) {
     return res.status(200).send(user);
 }
 
+async function getFollowers(req, res, next) {
+    const { followers, total } = await usersServices.getFollowers(req.query);
+    return res.status(200).send({
+        skip: req.query.skip || SKIP_DEFAULT,
+        limit: req.query.limit || LIMIT_DEFAULT,
+        items: followers,
+        total
+    });
+}
+
+async function getFollowings(req, res, next) {
+    const { followings, total } = await usersServices.getFollowings(req.query);
+    return res.status(200).send({
+        skip: req.query.skip || SKIP_DEFAULT,
+        limit: req.query.limit || LIMIT_DEFAULT,
+        items: followings,
+        total
+    });
+}
+
 module.exports = {
     createUser,
     updateUser,
@@ -78,5 +99,7 @@ module.exports = {
     login,
     deleteUser,
     followUser,
-    unfollowUser
+    unfollowUser,
+    getFollowers,
+    getFollowings
 };
