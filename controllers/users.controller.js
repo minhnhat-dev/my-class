@@ -59,16 +59,14 @@ async function deleteUser(req, res, next) {
 }
 
 async function followUser(req, res, next) {
-    const { id } = req.params;
-    const data = await validateFollowUser(id, req.body);
-    const user = await usersServices.handleFollow(id, data);
+    const data = await validateFollowUser(req.body);
+    const user = await usersServices.handleFollow(data);
     return res.status(200).send(user);
 }
 
 async function unfollowUser(req, res, next) {
-    const { id } = req.params;
-    const data = await validateUnFollowUser(id, req.body);
-    const user = await usersServices.handleUnFollow(id, data);
+    const data = await validateUnFollowUser(req.body);
+    const user = await usersServices.handleUnFollow(data);
     return res.status(200).send(user);
 }
 

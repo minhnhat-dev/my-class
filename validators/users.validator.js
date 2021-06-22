@@ -82,14 +82,14 @@ async function validateUpdateUser(id, body) {
     return body;
 }
 
-async function validateFollowUser(id, body) {
+async function validateFollowUser(body) {
     const { userId, followerId } = body;
 
     if (userId === followerId) {
         throw new CreateError.BadRequest(ERROR_CODES.ERROR_YOU_NOT_FOLLOW_YOURSELF);
     }
 
-    const user = await validateUser(id);
+    const user = await validateUser(userId);
     const userFollwer = await validateUser(followerId);
 
     if (!userFollwer) {
@@ -108,14 +108,14 @@ async function validateFollowUser(id, body) {
     return body;
 }
 
-async function validateUnFollowUser(id, body) {
+async function validateUnFollowUser(body) {
     const { userId, unFollowerId } = body;
 
     if (userId === unFollowerId) {
         throw new CreateError.BadRequest(ERROR_CODES.ERROR_YOU_NOT_UNFOLLOW_YOURSELF);
     }
 
-    const user = await validateUser(id);
+    const user = await validateUser(userId);
     const userUnFollwer = await validateUser(unFollowerId);
 
     if (!userUnFollwer) {

@@ -54,8 +54,8 @@ async function updateUser(id, data) {
     return userUpdated;
 }
 
-async function handleFollow(userId, data) {
-    const { followerId } = data;
+async function handleFollow(data) {
+    const { userId, followerId } = data;
     /* create follower  */
     const [follower, following] = await Promise.all([
         Followers.create({ userId: followerId, followerId: userId }),
@@ -105,8 +105,8 @@ async function handleFollowTransation(userId, data) {
     }
 }
 
-async function handleUnFollow(userId, data) {
-    const { unFollowerId } = data;
+async function handleUnFollow(data) {
+    const { userId, unFollowerId } = data;
     /* create follower  */
     const [follower, following] = await Promise.all([
         Followers.deleteOne({ userId: unFollowerId, followerId: userId }),
