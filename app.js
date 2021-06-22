@@ -61,7 +61,7 @@ app.use(express.urlencoded());
 app.use(cookieParser());
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(compression());
 app.use(responseTime());
 
