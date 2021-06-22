@@ -94,7 +94,12 @@ function uploadImage(req, res) {
 async function deleteImage(req, res) {
     const { file } = req.body;
     const { path: pathFile } = file;
-    await fs.unlinkSync(path.resolve(pathFile));
+    const pathDelete = path.resolve(pathFile);
+
+    if (pathDelete) {
+        await fs.unlinkSync();
+    }
+
     return res.status(204).send();
 }
 
