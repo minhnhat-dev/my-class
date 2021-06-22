@@ -97,7 +97,7 @@ async function deleteImage(req, res) {
     const pathDelete = path.resolve(pathFile);
 
     if (pathDelete) {
-        await fs.unlinkSync();
+        await fs.unlinkSync(pathDelete);
     }
 
     return res.status(204).send();
