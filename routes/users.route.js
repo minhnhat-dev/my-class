@@ -12,6 +12,8 @@ require("express-async-errors");
 router.post("/auth/register", validateBody(usersSchema.create), usersControllers.createUser);
 router.post("/auth/login", validateBody(usersSchema.login), usersControllers.login);
 router.get("/", validateQuery(usersSchema.getList), usersControllers.getUsers);
+router.get("/followings/", usersControllers.followUser);
+router.get("/followers/", usersControllers.unfollowUser);
 router.put("/follow/", validateBody(usersSchema.follow), usersControllers.followUser);
 router.put("/unfollow/", validateBody(usersSchema.unFollow), usersControllers.unfollowUser);
 router.put("/:id", validateBody(usersSchema.update), usersControllers.updateUser);
