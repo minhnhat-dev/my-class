@@ -19,6 +19,8 @@ services:
       - "3000"
     depends_on: 
       - mongodb
+    volumes:
+      - ./public/storage/images:/app/public/storage/images
     restart: always
   mongodb:
     image: mongo:4.2
