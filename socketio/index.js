@@ -2,12 +2,11 @@ const http = require("http");
 const socketServer = require("socket.io");
 const config = require("../configs/other");
 const {
-    addUser,
-    getUsersInRoom,
-    getUser,
-    getUsersOnline,
-    removeUser
-} = require("../services/socket-io.service");
+    addDevice,
+    getDevice,
+    getDevices,
+    removeDevice
+} = require("../services/devices.service");
 
 const PORT_SOCKET = process.env.PORT_SOCKET || 3001;
 
@@ -51,7 +50,7 @@ global.io = io;
 // io.use(authenticate);
 
 io.on("connection", (socket) => {
-    logger.info(`+ ${socket.id} is connnect....`);
+    console.log(`+ ${socket.id} is connnect....`);
     io.emit("welcome", "Welcome my connection");
     const { deviceId, displayId } = socket.handshake.query;
 
@@ -66,12 +65,12 @@ io.on("connection", (socket) => {
     socket.join(deviceId);
     console.log("socket.rooms 2", socket.rooms);
     const socketId = socket.id;
-    logger.info("+ addDevice() socketId: ==>", socketId);
-    logger.info("+ addDevice() deviceId: ==>", deviceId);
+    console.log("+ addDevice() socketId: ==>", socketId);
+    console.log("+ addDevice() deviceId: ==>", deviceId);
     const input = { deviceId, socketId };
     addDevice(input);
     const devices = getDevices();
-    logger.info("+ addDevice() devices: ==>", devices);
+    console.log("+ addDevice() devices: ==>", devices);
 
     socket.on("sendMessage", ({ deviceId, data }) => {
         io.to(deviceId).emit("getMessage", {
@@ -83,7 +82,7 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         socket.leave(deviceId);
         console.log("disconnect socket.rooms 2", socket.rooms);
-        logger.info(`+ ${socket.id} is disconnect....`);
+        console.log(`+ ${socket.id} is disconnect....`);
     });
 });
 
