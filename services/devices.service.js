@@ -18,7 +18,7 @@ function addDevice(input) {
 
     const device = { deviceId, socketId };
     devices.push(device);
-    logger.info("+ addDevice() devices: ==> ", devices);
+    console.log("+ addDevice() devices: ==> ", devices);
     return devices;
 }
 
@@ -33,7 +33,7 @@ function getDevices() {
 function removeDevice(socketId) {
     const newDevices = devices.filter((item) => item.socketId !== socketId);
     devices = newDevices;
-    logger.info(`+ removeDevice() devices: ==> ${devices}`);
+    console.log(`+ removeDevice() devices: ==> ${devices}`);
     return devices;
 }
 
