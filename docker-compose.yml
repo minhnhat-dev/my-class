@@ -15,8 +15,13 @@ services:
     image: dockernhatnguyen/node-server
     environment:
       - PORT=3000
+      - PORT_SOCKET=3001
+    ports:
+      - "3000:3000"
+      - "3001:3001"
     expose:
       - "3000"
+      - "3001"
     depends_on: 
       - mongodb
     volumes:

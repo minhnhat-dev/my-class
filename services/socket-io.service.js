@@ -1,31 +1,37 @@
-const users = [];
-console.log('users', users);
+const CreateError = require("http-errors");
+
+let users = [];
+console.log("users", users);
+
 const addUser = (input) => {
-    const { id, roomName = '', userName = '' } = input;
-    if (!roomName || !userName) return { error: 'Username and RoomName are required.' };
+    const { userId, socketId } = input;
+    if (!userId || !socketId) throw new CreateError.BadRequest("error_userId_required");
 
-    const existingUser = users.find((user) => user.roomName === roomName.trim() && user.name === userName.trim());
+    const existingUser = users.find((user) => user.userId === userId);
 
-    if (existingUser) return { error: 'Username is taken.' };
+    if (existingUser) return { error: "Username is taken." };
 
-    const user = {
-        id,
-        roomName,
-        userName
-    };
+    const user = { userId, socketId };
     users.push(user);
-    return { user };
+    console.log("users", users);
+    return user;
 };
 
-const removeUser = (id) => {
-    const index = users.findIndex((user) => user.id === id);
-
-    if (index !== -1) return users.splice(index, 1)[0];
+const removeUser = (socketId) => {
+    const newUser = users.filter((item) => item.socketId !== socketId);
+    users = newUser;
+    console.log("newUser", newUser);
     return true;
 };
 
-const getUser = (id) => users.find((user) => user.id === id);
+const getUser = (userId) => users.find((user) => user.userId === userId);
 
 const getUsersInRoom = (roomName) => users.filter((user) => user.roomName === roomName);
-
-module.exports = { addUser, removeUser, getUser, getUsersInRoom };
+const getUsersOnline = () => users;
+module.exports = {
+    addUser,
+    removeUser,
+    getUser,
+    getUsersInRoom,
+    getUsersOnline
+};
