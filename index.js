@@ -28,7 +28,7 @@ process.on("SIGTERM", () => {
 function shutdown() {
     server.close((err) => {
         if (err) {
-            logger.error("SHUTDOWN ERROR", err);
+            console.error("SHUTDOWN ERROR", err);
             process.exitCode = 1;
         }
         process.exit();
