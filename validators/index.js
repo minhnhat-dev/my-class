@@ -105,7 +105,6 @@ function validateSchema(schema, path = "body") {
     schema.$async = true;
     return async function (req, res, next) {
         try {
-            console.log("req.body", req.body);
             await ajv.validate(schema, req[path]);
             next();
         } catch (err) {
