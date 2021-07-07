@@ -7,7 +7,7 @@
 ./history
 /logs
 .nyc_output/
-
+/.history
 package-lock.json
 .env
 

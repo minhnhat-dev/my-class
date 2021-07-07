@@ -80,10 +80,10 @@ app.use(session({
 }));
 
 app.get("/", (req, res) => { res.render(path.resolve("./views/index.ejs")); });
-
+const { APPID } = process.env;
 app.get("/ping", (req, res) => {
     console.log("Accept ping !");
-    res.status(200).send({ message: `Pong ${process.env.PORT} !!!` });
+    res.status(200).send({ message: `Pong ${process.env.PORT} APPID ${APPID} !!!` });
 });
 
 app.use(routes);

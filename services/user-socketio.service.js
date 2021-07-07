@@ -1,7 +1,6 @@
 const CreateError = require("http-errors");
 
 let users = [];
-console.log("users", users);
 
 const addUser = (input) => {
     const { userId, socketId } = input;
@@ -9,29 +8,31 @@ const addUser = (input) => {
 
     const existingUser = users.find((user) => user.userId === userId);
 
-    if (existingUser) return { error: "Username is taken." };
+    if (!existingUser) {
+        const user = { userId, socketId };
+        users.push(user);
+    }
 
-    const user = { userId, socketId };
-    users.push(user);
-    console.log("users", users);
-    return user;
+    return users;
 };
 
 const removeUser = (socketId) => {
     const newUser = users.filter((item) => item.socketId !== socketId);
     users = newUser;
-    console.log("newUser", newUser);
     return true;
 };
 
 const getUser = (userId) => users.find((user) => user.userId === userId);
+const getUsers = () => users;
 
 const getUsersInRoom = (roomName) => users.filter((user) => user.roomName === roomName);
 const getUsersOnline = () => users;
+
 module.exports = {
     addUser,
     removeUser,
     getUser,
     getUsersInRoom,
-    getUsersOnline
+    getUsersOnline,
+    getUsers
 };

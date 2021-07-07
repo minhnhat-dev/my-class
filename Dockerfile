@@ -15,6 +15,6 @@ RUN if [ "$NODE_ENV" = "development" ]; \
 # Copy app source code
 COPY . ./
 #Expose port and start application
-EXPOSE ${PORT} 3001
+EXPOSE ${PORT}
 
 CMD npm run start-dev

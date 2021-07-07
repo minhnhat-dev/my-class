@@ -1,12 +1,13 @@
 const app = require("./app");
 const configs = require("./configs");
 const { startSocketioServer } = require("./socketio");
+const {APPID} = process.env;
 
 const server = app.listen(configs.port, () => {
-    console.log(`🚀 Running on port ${configs.port}`);
+    console.log(`🚀 Running on port ${configs.port} APPID: {${APPID}}`);
 });
 
-startSocketioServer();
+// startSocketioServer(server);
 process.on("uncaughtException", (exception) => {
     console.error(exception);
 });
