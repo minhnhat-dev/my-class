@@ -86,11 +86,11 @@ app.get("/ping", (req, res) => {
     res.status(200).send({ message: `Pong ${process.env.PORT} APPID ${APPID} !!!` });
 });
 
-app.get("/api-1", (req, res) => {
+app.get("/api1", (req, res) => {
     res.status(200).send({ message: `API 1 ${process.env.PORT} APPID ${APPID} !!!` });
 });
 
-app.get("/api-2", (req, res) => {
+app.get("/api2", (req, res) => {
     console.log("Accept ping !");
     res.status(200).send({ message: `API 2 ${process.env.PORT} APPID ${APPID} !!!` });
 });
