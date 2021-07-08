@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  node-server-1:
+    build: .
+    container_name: node-1
+    ports:
+      - "3000:3000"
+    environment:
+      - APPID=node-1
+    depends_on: 
+      - mongodb
+    volumes:
+      - ./public/storage/images:/app/public/storage/images
+    restart: always
+  node-server-2:
+    build: .
+    container_name: node-2
+    environment:
+      - APPID=node-2
+    ports:
+      - "4000:3000"
+    depends_on: 
+      - mongodb
+    volumes:
+      - ./public/storage/images:/app/public/storage/images
+    restart: always
+  mongodb:
+    image: mongo:4.2
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=nhatnguyen
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+    volumes: 
+      - mongodb:/data/db
+    restart: always
+  redis:
+    image: redis:6.2.3
+volumes:
+  mongodb:
+  
+
