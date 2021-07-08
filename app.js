@@ -80,19 +80,20 @@ app.use(session({
 }));
 
 app.get("/", (req, res) => { res.render(path.resolve("./views/index.ejs")); });
-const { APPID } = process.env;
+const { APPID, PORT } = process.env;
 app.get("/ping", (req, res) => {
     console.log("Accept ping !");
     res.status(200).send({ message: `Pong ${process.env.PORT} APPID ${APPID} !!!` });
 });
 
 app.get("/api1", (req, res) => {
-    res.status(200).send({ message: `API 1 ${process.env.PORT} APPID ${APPID} !!!` });
+    console.log("api1");
+    res.status(200).send(`api1 ===> APPID: ${APPID}`);
 });
 
 app.get("/api2", (req, res) => {
-    console.log("Accept ping !");
-    res.status(200).send({ message: `API 2 ${process.env.PORT} APPID ${APPID} !!!` });
+    console.log("api2");
+    res.status(200).send(`api2 ===> APPID: ${APPID}`);
 });
 
 app.use(routes);
