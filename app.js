@@ -66,7 +66,7 @@ app.use(compression());
 app.use(responseTime());
 
 /* use redis session */
-// app.enable("trust proxy");
+app.enable("trust proxy");
 app.use(session({
     store: new RedisStore({ client: redisClient }),
     secret: SESSION_SECRET,
@@ -88,12 +88,13 @@ app.get("/ping", (req, res) => {
 
 app.get("/api1", (req, res) => {
     console.log("api1");
-    res.status(200).send(`api1 ===> APPID: ${APPID}`);
+    const ip = req.headers["x-forwarded-for"] || "";
+    res.status(200).send(`api1 ===> APPID: ${APPID}, id: ${ip}`);
 });
 
 app.get("/api2", (req, res) => {
-    console.log("api2");
-    res.status(200).send(`api2 ===> APPID: ${APPID}`);
+    const ip = req.headers["x-forwarded-for"] || "";
+    res.status(200).send(`api2 ===> APPID: ${APPID}, id: ${ip}`);
 });
 
 app.use(routes);
