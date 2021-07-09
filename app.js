@@ -88,11 +88,13 @@ app.get("/ping", (req, res) => {
 
 app.get("/api1", (req, res) => {
     console.log("api1");
+    console.log("req.headers", req.headers);
     const ip = req.headers["x-forwarded-for"] || "";
     res.status(200).send(`api1 ===> APPID: ${APPID}, id: ${ip}`);
 });
 
 app.get("/api2", (req, res) => {
+    console.log("req.headers", req.headers);
     const ip = req.headers["x-forwarded-for"] || "";
     res.status(200).send(`api2 ===> APPID: ${APPID}, id: ${ip}`);
 });
