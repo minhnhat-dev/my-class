@@ -66,7 +66,7 @@ app.use(compression());
 app.use(responseTime());
 
 /* use redis session */
-app.enable("trust proxy");
+// app.enable("trust proxy");
 app.use(session({
     store: new RedisStore({ client: redisClient }),
     secret: SESSION_SECRET,
