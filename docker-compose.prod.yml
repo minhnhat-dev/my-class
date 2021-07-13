@@ -1,16 +1,67 @@
 version: "3"
-services: 
-  nginx:
+services:
+  node-server-1:
+    build: .
+    build:
+      context: .
+      args:
+        NODE_ENV: production
+    container_name: node-1
     ports:
-      - "80:80" # cung cấp các port mapping vs nginx 80
+      - "1111:3000"
+    environment:
+      - APPID=node-1
+      - NODE_ENV=production
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - SESSION_SECRET=${SESSION_SECRET}
+    command: node index.js
+    depends_on: 
+      - mongodb
+    volumes:
+      - ./public/storage/images:/app/public/storage/images
+    restart: always
+  node-server-2:
+    build:
+      context: .
+      args:
+        NODE_ENV: production
+    container_name: node-2
+    environment:
+      - APPID=node-2
+      - NODE_ENV=production
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - SESSION_SECRET=${SESSION_SECRET}
+    ports:
+      - "2222:3000"
+    command: node index.js
+    depends_on: 
+      - mongodb
+    volumes:
+      - ./public/storage/images:/app/public/storage/images
+    restart: always
+  node-server-3:
+    build:
+      context: .
+      args:
+        NODE_ENV: production
+    container_name: node-3
+    environment:
+      - APPID=node-3
+      - NODE_ENV=production
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - SESSION_SECRET=${SESSION_SECRET}
+    ports:
+      - "3333:3000"
+    command: node index.js
+    depends_on: 
+      - mongodb
+    volumes:
+      - ./public/storage/images:/app/public/storage/images
+    restart: always
   node-server:
-    # deploy:
-    #   replicas: 2
-    #   restart_policy:
-    #     condition: any
-    #   update_config:
-    #     parallelism: 2
-    #     delay: 10s
     build:
       context: .
       args:

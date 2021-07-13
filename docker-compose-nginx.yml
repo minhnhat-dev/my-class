@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  # nginx:
+  #   image: nginx:stable-alpine
+  #   restart: always
+  #   depends_on:
+  #     - node-server
+  #   ports:
+  #     - "80:80"
+  #   volumes: 
+  #     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+  node-server-1:
+    build: .
+    image: dockernhatnguyen/node-server
+    links:
+      - redis
+    environment:
+      - PORT=3000
+    expose:
+      - "3000"
+    depends_on: 
+      - mongodb
+    volumes:
+      - ./public/storage/images:/app/public/storage/images
+    restart: always
+  mongodb:
+    image: mongo:4.2
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=nhatnguyen
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+    volumes: 
+      - mongodb:/data/db
+    restart: always
+  redis:
+    image: redis:alpine
+    expose:
+      - "6379"
+volumes:
+  mongodb:
+  
