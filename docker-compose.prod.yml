@@ -61,20 +61,6 @@ services:
     volumes:
       - ./public/storage/images:/app/public/storage/images
     restart: always
-  node-server:
-    build:
-      context: .
-      args:
-        NODE_ENV: production
-    environment:
-      - NODE_ENV=production
-      - MONGO_USER=${MONGO_USER}
-      - MONGO_PASSWORD=${MONGO_PASSWORD}
-      - SESSION_SECRET=${SESSION_SECRET}
-    command: node index.js
-    depends_on: 
-      - mongodb
-    restart: always
   mongodb:
     image: mongo:4.2
     ports:
