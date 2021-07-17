@@ -1,7 +1,7 @@
 const socketServer = require("socket.io");
 const redis = require("redis");
 const redisAdapter = require("socket.io-redis");
-
+const { REDIS_PORT, REDIS_URL, SESSION_SECRET } = require("../datasources/redis/configs");
 const { handleChatSocketIO } = require("./chat.socketio");
 
 function startSocketioServer(server) {
@@ -9,12 +9,14 @@ function startSocketioServer(server) {
         path: "/v1/socketio",
         allowEIO3: true,
         cors: {
-            origin: "*", // url connect
+            origin: "http://localhost:3002",
+            methods: ["GET", "POST"],
+            credentials: true,
             allowedHeaders: ["Authorization"]
         }
     });
 
-    const pubClient = redis.createClient({ host: "localhost", port: 6379 });
+    const pubClient = redis.createClient({ host: REDIS_URL, port: REDIS_PORT });
     const subClient = pubClient.duplicate();
     io.adapter(redisAdapter({ pubClient, subClient }));
     handleChatSocketIO(io);

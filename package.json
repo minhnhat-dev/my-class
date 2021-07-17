@@ -6,7 +6,7 @@
     "client-install": "npm install --prefix client",
     "start": "node index.js",
     "start-dev": "NODE_ENV=development nodemon index.js",
-    "local": "REDIS_URL=127.0.0.1 MONGO_IP=minhnhat.dev PORT=5000 NODE_ENV=localhost nodemon index.js"
+    "local": "REDIS_URL=127.0.0.1 PORT=5000 NODE_ENV=localhost nodemon index.js"
   },
   "dependencies": {
     "@socket.io/redis-adapter": "^7.0.0",

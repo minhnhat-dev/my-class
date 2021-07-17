@@ -12,17 +12,12 @@ function handleChatSocketIO(io) {
 
     chatNamespace.on("connection", (socket) => {
         console.log(`+ ${socket.id} is connnect....`);
-        console.log("test");
         io.emit("welcome", "Welcome my connection");
         const socketId = socket.id;
         const { userId } = socket.handshake.query;
 
         if (!userId) {
-            chatNamespace.to(socketId).emit("error", {
-                error: [
-                    "error_userId_required"
-                ]
-            });
+            chatNamespace.to(socketId).emit("error", { error: "User Id is required !" });
             return;
         }
 

@@ -1,22 +1,80 @@
 version: "3"
 services:
-  nginx:
-    image: nginx:stable-alpine
-    ports: 
-      - "80:80"
-  node-server:
+  haproxy:
+    build: ./haproxy
+    links:
+      - node-server-1
+      - node-server-2
+      - node-server-3
+    ports:
+      - "3000:80"
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on: 
+      - node-server-1
+      - node-server-2
+      - node-server-3
+  node-server-1:
     build:
       context: .
       args:
         NODE_ENV: development
-    environment:
-      - PORT=3000
+    links:
+      - redis
     expose:
       - "3000"
     volumes:
       - ./:/app
       - /app/node_modules
+      - ./public/storage/images:/app/public/storage/images
     environment:
+      - APPID=node-1
+      - NODE_ENV=development
+      - MONGO_USER=nhatnguyen
+      - MONGO_PASSWORD=mypassword
+      - SESSION_SECRET=secret
+    command: npm run start-dev
+    depends_on: 
+      - mongodb
+    restart: always
+  node-server-2:
+    build:
+      context: .
+      args:
+        NODE_ENV: development
+    links:
+      - redis
+    expose:
+      - "3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - ./public/storage/images:/app/public/storage/images
+    environment:
+      - APPID=node-2
+      - NODE_ENV=development
+      - MONGO_USER=nhatnguyen
+      - MONGO_PASSWORD=mypassword
+      - SESSION_SECRET=secret
+    command: npm run start-dev
+    depends_on: 
+      - mongodb
+    restart: always
+  node-server-3:
+    build:
+      context: .
+      args:
+        NODE_ENV: development
+    links:
+      - redis
+    expose:
+      - "3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - ./public/storage/images:/app/public/storage/images
+    environment:
+      - APPID=node-3
       - NODE_ENV=development
       - MONGO_USER=nhatnguyen
       - MONGO_PASSWORD=mypassword
@@ -37,17 +95,7 @@ services:
     restart: always
   redis:
     image: redis:6.2.3
-  mongo-express:
-    image: mongo-express:0.54
-    depends_on:
-      - mongodb
-    environment:
-      - ME_CONFIG_MONGODB_SERVER=mongodb
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=nhatnguyen
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=mypassword
-    ports:
-      - '8081:8081'
-    volumes: 
-      - mongodb:/data/db
+    expose:
+      - "6379"
 volumes:
   mongodb:

@@ -21,6 +21,7 @@ const { verifyToken } = require("./middlewares/authentication");
 require("express-async-errors");
 require("./datasources");
 
+console.log("REDIS_URL", REDIS_URL);
 const redisClient = redis.createClient({
     host: REDIS_URL,
     port: REDIS_PORT
@@ -50,11 +51,11 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
-if (["localhost", "development"].includes(process.env.NODE_ENV)) {
-    app.use(morgan("dev"));
-} else {
-    app.use(morgan("common"));
-}
+// if (["localhost", "development"].includes(process.env.NODE_ENV)) {
+//     app.use(morgan("dev"));
+// } else {
+//     app.use(morgan("common"));
+// }
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -79,10 +80,14 @@ app.use(session({
     }
 }));
 
+const skipUrls = ["/ping/", "/ping"];
+const morganOptions = { skip: (req) => skipUrls.includes(req.url) };
+// app.use(morgan(config.morgan_log_format, morganOptions));
+app.use(morgan("combined", morganOptions));
+
 app.get("/", (req, res) => { res.render(path.resolve("./views/index.ejs")); });
 const { APPID, PORT } = process.env;
 app.get("/ping", (req, res) => {
-    console.log("Accept ping !");
     res.status(200).send({ message: `Pong ${process.env.PORT} APPID ${APPID} !!!` });
 });
 

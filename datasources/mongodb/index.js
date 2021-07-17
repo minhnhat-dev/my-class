@@ -9,7 +9,6 @@ let url = config.MONGO_LOCALHOST;
 if (
     process.env.NODE_ENV === "development"
     || process.env.NODE_ENV === "production"
-    || process.env.NODE_ENV === "localhost"
 ) {
     /* connect replica set */
     // url = `mongodb://${"mongo1"}:${config.MONGO_PORT},${"mongo2"}:${config.MONGO_PORT},${"mongo3"}:${config.MONGO_PORT}/${config.MONGO_DB_NAME}?replicaSet=rs0&authSource=admin`;

@@ -1,15 +1,6 @@
-FROM ubuntu:18.04
-
-RUN apt update -y \
-    && apt install nginx -y \
-    && apt-get install software-properties-common -y \
-    && add-apt-repository ppa:certbot/certbot -y \
-    && apt-get update -y \
-    && apt-get install python-certbot-nginx -y \
-    && apt-get clean
-
-EXPOSE 80
-
-STOPSIGNAL SIGTERM
-
-CMD ["nginx", "-g", "daemon off;"]
+FROM haproxy:1.8
+RUN  mkdir /run/haproxy \
+    && mkdir -p /var/lib/haproxy \
+    && mkdir -p  /var/run/haproxy \
+    && touch /var/lib/haproxy/stats \
+COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
